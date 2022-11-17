@@ -226,7 +226,7 @@ paths:
       operationId: getAllPhoto
       summary: Get all photos of user
       description: |-
-        Return entire collections of photos of any user
+        Return entire collection of photos of any user
       responses:
         '200':
           description: successful operation
@@ -670,8 +670,9 @@ components:
           type: integer
           format: int64
           example: 10
-        metaData:
+        image:
           type: string
+          format: binary
         time:
           type: string
           format: date-time
