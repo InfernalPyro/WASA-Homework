@@ -1,0 +1,728 @@
+openapi: 3.0.3
+info:
+  title: WASAPhoto
+  description: |-
+    Keep in touch with your friends by sharing photos of special moments, thanks to WASAPhoto! You can
+    upload your photos directly from your PC, and they will be visible to everyone following you.
+  version: "1"
+paths:
+
+  /session:
+    post:
+      tags: ["login"]
+      operationId: doLogin
+      summary: Logs in the user
+      description: |-
+        If the user does not exist, it will be created,
+        and an identifier is returned.
+        If the user exists, the user identifier is returned.
+      requestBody:
+        description: User details
+        content:
+          application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Maria
+                    pattern: 'ˆ.*?$'
+                    minLength: 3
+                    maxLength: 16
+        required: true
+      responses:
+        '201':
+          description: User log-in action successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  identifier:
+                    # change here if you decide to use an integer
+                    # or any other type of identifier
+                    type: string
+                    example: "abcdef012345"
+
+  /session/{userId}:  
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+    delete:       
+      tags: ["User"]
+      operationId: deleteUser
+      summary: Delete account
+      description: |-
+        A logged user can delete their account
+      responses:
+        '200':
+          description: Account deleted
+        '400':
+          description: User is not logged  
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+  /session/{userId}/profile: 
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+    get:
+      tags: ["User"]
+      summary: Get user profile 
+      operationId: getUserProfile
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+  /session/{userId}/home:
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+    get:
+      tags: ["User"]
+      summary: Get stream
+      description: |-
+        Gets a stream of photos (images) in reverse chronological 
+        order, with information about when each photo was uploaded 
+        (date and time) and how many likes and comments it has.
+      operationId: getMyStream
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stream'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Stream'
+        '400':
+          description: User is not logged
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+
+  /session/{userId}/changeUsername:
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+    patch:       
+      tags: ["Profile"]
+      operationId: setMyUserName
+      summary: Update user Username
+      description: |-
+        A logged user can change their username if logged
+      requestBody:
+        description: Update the username
+        content:
+          application/json:
+            schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    example: new Name
+        required: true
+      responses:
+        '200':
+          description: Username updated
+        '400':
+          description: User is not logged
+        '401':
+          description: New Username not valid
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+  /session/{userId}/uploadPhoto:
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+    post:       
+      tags: ["Profile"]
+      operationId: uploadPhoto
+      summary: Upload a new photo
+      description: |-
+        A logged user can upload a photo in their profile
+      requestBody:
+        description: Upload a photo
+        content:
+          image/*:    
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Photo uploaded
+        '400':
+          description: User is not logged 
+        '401':
+          description: Photo cannot be uploaded
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+  /session/{userId}/photo:
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+    get:       
+      tags: ["Profile"]
+      operationId: getAllPhoto
+      summary: Get all photos of user
+      description: |-
+        Return entire collections of photos of any user
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array    
+                items:    
+                  $ref: '#/components/schemas/Photo'
+        '400':
+          description: User is not logged 
+        '401':
+          description: Photo cannot be found
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+  /session/{userId}/photo/{photoId}:
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+    delete:       
+      tags: ["Profile"]
+      operationId: deletePhoto
+      summary: Delete a photo
+      description: |-
+        A logged user can delete a photo they posted before
+      parameters:
+        - name: photoId
+          in: path
+          description: Id of the photo to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 5
+      responses:
+        '200':
+          description: Photo deleted
+        '400':
+          description: User is not logged  
+        '401':
+          description: Photo not found
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+  /session/photo/{photoId}:
+    get:       
+      tags: ["Profile"]
+      operationId: getPhoto
+      summary: Get a single photo 
+      description: |-
+       Return photo specified by photoId
+      parameters:
+        - name: photoId
+          in: path
+          description: Id of the photo to get
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 5
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+               schema:
+                 $ref: '#/components/schemas/Photo'
+        '400':
+          description: User is not logged 
+        '401':
+          description: Photo cannot be found
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+
+
+  /session/{userId}/follow:  
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+    
+    put:
+      tags: ["User operations"]
+      operationId: followUser
+      summary: Follow another user
+      description: |-
+        An user can follow another user while on their profile page
+      parameters: 
+        - in: query
+          name: followId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The user to follow ID's
+      responses:
+        '200':
+          description: User added to follow list
+        '400':
+          description: User is not logged  
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+    delete:
+      tags: ["User operations"]
+      operationId: unfollowUser
+      summary: Unfollow another user
+      description: |-
+           An user can unfollow another user
+      parameters: 
+          - in: query
+            name: followId 
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: The user to unfollow Id
+      responses:
+            '200':
+              description: User removed from follow list
+            '400':
+              description: User is not logged  
+            '404':
+              description: User not found
+      security:
+        - basicAuth: []
+
+  /session/{userId}/ban:      
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+
+    put:
+      tags: ["User operations"]
+      operationId: banUser
+      summary: Ban another user
+      description: |-
+        An user can ban another user, blocking them from seeing their profile
+      parameters: 
+        - in: query
+          name: banId 
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The user to ban Id
+      responses:
+        '200':
+          description: User added to banned list
+        '400':
+          description: User is not logged  
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+    delete:
+      tags: ["User operations"]
+      operationId: unbanUser
+      summary: Unban another user
+      description: |-
+           An user can unban another user
+      parameters: 
+          - in: query
+            name: banId
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: The user to unban Id
+      responses:
+            '200':
+              description: User removed from banned list
+            '400':
+              description: User is not logged  
+            '404':
+              description: User not found
+      security:
+        - basicAuth: []
+
+
+  /session/{userId}/{photoId}:   
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+
+    put:
+      tags: ["Photo"]
+      operationId: likePhoto
+      summary: Like a photo
+      description: |-
+        An user can like a photo uploaded by anyone
+      parameters: 
+        - in: path
+          name: photoId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The photo to like Id's
+      responses:
+        '200':
+          description: Photo liked
+        '400':
+          description: User is not logged 
+        '401':
+          description: Photo not found
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+    delete:
+      tags: ["Photo"]
+      operationId: unlikePhoto
+      summary: Unlike a photo
+      description: |-
+           An user can unlike any photo they liked before
+      parameters: 
+          - in: path
+            name: photoId 
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: The photo to unlike Id's
+      responses:
+            '200':
+              description: Photo Unliked
+            '400':
+              description: User is not logged 
+            '401':
+              description: Photo not found
+            '404':
+              description: User not found
+      security:
+        - basicAuth: []
+
+  /session/{userId}/{photoId}/comments:      
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
+
+    put:
+      tags: ["Photo"]
+      operationId: commentPhoto
+      summary: Comment a photo
+      description: |-
+        An user can make a comment on any photo
+      parameters: 
+        - in: path
+          name: photoId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The photo to comment Id's
+      requestBody:
+        description: Add a comment to the photo comments list
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'          
+          application/xml:
+              schema:
+                $ref: '#/components/schemas/Comment'
+      responses:
+        '200':
+          description: Comment added 
+        '400':
+          description: User is not logged
+        '401':
+          description: Photo not found
+        '402':
+          description: Comment not found
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+
+    delete:
+      tags: ["Photo"]
+      operationId: uncommentPhoto
+      summary: Delete a comment
+      description: |-
+           An user can delete any comments they made
+      parameters:    
+          - in: path
+            name: photoId
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: The photo with the comment Id's      
+          - in: query   
+            name: commentId 
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: The comment to delete Id's
+      responses:
+            '200':
+              description: Comment deleted
+            '400':
+              description: User is not logged
+            '401':
+              description: Photo not found
+            '402':
+              description: Comment not found
+            '404':
+              description: User not found
+      security:
+        - basicAuth: []
+  
+  /session/photo/{photoId}/comments:
+    get:       
+      tags: ["Photo"]
+      operationId: getAllComments
+      summary: Get all comments of photo
+      description: |-
+       Return every comment on the photo specified by photoId
+      parameters:
+        - name: photoId
+          in: path
+          description: Id of the photo to get
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 5
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+               schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '400':
+          description: User is not logged 
+        '401':
+          description: Photo cannot be found
+        '404':
+          description: User not found
+      security:
+        - basicAuth: []
+      
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: MyName
+        follows: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/User'
+          example:
+            - id: 11
+              username: Marco
+            - id: 12
+              username: Carlo
+        followers: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/User'
+          example:
+            - id: 13
+              username: Lucia
+        banned: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/User'
+          example:
+            - id: 9
+              username: Luca
+        photos: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/Photo'
+      xml:
+        name: user
+    
+    Photo:
+      type: object
+      properties:
+        photoId:  
+          type: integer
+          format: int64
+          example: 72
+        userId:
+          type: integer
+          format: int64
+          example: 10
+        metaData:
+          type: string
+        time:
+          type: string
+          format: date-time
+          example: 2022-11-10T117:32:28Z
+        likes:
+          type: integer
+          format: int64
+          example: 132
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+      xml:
+        name: photo
+
+    Comment:
+      type: object
+      properties:
+        commentId:
+          type: integer
+          format: int64
+          example: 3
+        photoId:
+          type: integer
+          format: int64
+          example: 72
+        userId:
+          type: integer
+          format: int64
+          example: 10
+        comment:
+          type: string
+          example: This is a comment
+        time:
+          type: string
+          format: date-time
+          example: 2022-11-10T117:32:28Z
+      xml:
+        name: comment
+
+    Stream:
+      type: object
+      properties:
+        photos:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Photo'
+      xml:
+        name: stream
+  
+  securitySchemes:
+    basicAuth:     
+      type: http
+      scheme: basic
