@@ -26,7 +26,6 @@ paths:
                   name:
                     type: string
                     example: Maria
-                    pattern: 'ˆ.*?$'
                     minLength: 3
                     maxLength: 16
         required: true
@@ -59,7 +58,7 @@ paths:
       description: |-
         A logged user can delete their account.
       responses:
-        '201':
+        '200':
           description: Account deleted
           content:
             application/json:
@@ -92,7 +91,7 @@ paths:
       description: |-
         Returns the profile of the user with specified Id.
       responses:
-        '201':
+        '200':
           description: successful operation
           content:
             application/json:
@@ -127,7 +126,7 @@ paths:
         order, with information about when each photo was uploaded 
         (date and time) and how many likes and comments it has.
       responses:
-        '201':
+        '200':
           description: successful operation
           content:
             application/json:
@@ -174,7 +173,7 @@ paths:
                     example: new Name
         required: true
       responses:
-        '201':
+        '200':
           description: Username updated
           content:
             application/json:
@@ -253,7 +252,7 @@ paths:
       description: |-
         Return entire collection of photos of the user specified in userId
       responses:
-        '201':
+        '200':
           description: successful operation
           content:
             application/json:
@@ -296,7 +295,7 @@ paths:
             format: int64
             example: 5
       responses:
-        '201':
+        '200':
           description: Photo deleted
           content:
             application/json:
@@ -330,7 +329,7 @@ paths:
             format: int64
             example: 5
       responses:
-        '201':
+        '200':
           description: successful operation
           content:
             application/json:
@@ -347,7 +346,7 @@ paths:
 
 
 
-  /user/{userId}/follow:  
+  /user/{userId}/follow/{followId}:  
     parameters: 
       - name: userId
         in: path
@@ -365,7 +364,7 @@ paths:
       description: |-
         An user can follow another user while on their profile page
       parameters: 
-        - in: query
+        - in: path
           name: followId
           required: true
           schema:
@@ -373,7 +372,7 @@ paths:
             format: int64
           description: The user to follow ID's
       responses:
-        '201':
+        '200':
           description: User added to follow list
           content:
             application/json:
@@ -395,7 +394,7 @@ paths:
       description: |-
            An user can unfollow another user
       parameters: 
-          - in: query
+          - in: path
             name: followId 
             required: true
             schema:
@@ -403,7 +402,7 @@ paths:
               format: int64
             description: The user to unfollow Id
       responses:
-            '201':
+            '200':
               description: User removed from follow list
               content:
                 application/json:
@@ -418,7 +417,7 @@ paths:
       security:
         - Authentication: []
 
-  /user/{userId}/ban:      
+  /user/{userId}/ban/{banId}:      
     parameters: 
       - name: userId
         in: path
@@ -436,7 +435,7 @@ paths:
       description: |-
         An user can ban another user, blocking them from seeing their profile
       parameters: 
-        - in: query
+        - in: path
           name: banId 
           required: true
           schema:
@@ -444,7 +443,7 @@ paths:
             format: int64
           description: The user to ban Id
       responses:
-        '201':
+        '200':
           description: User added to banned list
           content:
             application/json:
@@ -466,7 +465,7 @@ paths:
       description: |-
            An user can unban another user
       parameters: 
-          - in: query
+          - in: path
             name: banId
             required: true
             schema:
@@ -474,7 +473,7 @@ paths:
               format: int64
             description: The user to unban Id
       responses:
-            '201':
+            '200':
               description: User removed from banned list
               content:
                 application/json:
@@ -490,11 +489,12 @@ paths:
         - Authentication: []
 
 
-  /user/{userId}/{photoId}/likes:   
+  /user/{userId}/photo/{photoId}/likes:   
     parameters: 
       - name: userId
         in: path
-        description: The id of the logged user
+        description: |-
+         The id of the logged user that will be added or removed from the photo likes list
         required: true
         schema:
           type: integer
@@ -515,18 +515,8 @@ paths:
             type: integer
             format: int64
           description: The photo to like Id's
-      #requestBody:
-      #  description: Add the userId to the photo likes list
-      #  content:
-      #      application/json:
-      #        schema:
-      #          type: object
-      #          properties:
-      #            userId:
-      #              type: integer
-      #              example: 10  
       responses:
-        '201':
+        '200':
           description: Photo liked
           content:
             application/json:
@@ -557,18 +547,8 @@ paths:
               type: integer
               format: int64
             description: The photo to unlike Id's
-      requestBody:
-        description: Remove the userId to the photo likes list
-        content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  userId:
-                    type: integer
-                    example: 10  
       responses:
-            '201':
+            '200':
               description: Photo Unliked
               content:
                 application/json:
@@ -585,7 +565,7 @@ paths:
       security:
         - Authentication: []
 
-  /user/{userId}/{photoId}/comments:      
+  /user/{userId}/photo/{photoId}/comments:      
     parameters: 
       - name: userId
         in: path
@@ -620,7 +600,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Comment'
       responses:
-        '201':
+        '200':
           description: Comment added to photo
           content:
             application/json:
@@ -661,7 +641,7 @@ paths:
               format: int64
             description: The comment to delete Id's
       responses:
-            '201':
+            '200':
               description: Comment deleted
               content:
                 application/json:
@@ -774,14 +754,17 @@ components:
         image:
           type: string
           format: binary
+          example: this contains the photo
         time:
           type: string
           format: date-time
-          example: 2022-11-10T117:32:28Z
+          example: 2017-07-21T17:32:28Z
         likes:
           type: array
           items:
-            type: string
+            type: integer
+            format: int64
+            example: 10
         comments:
           type: array
           items:
