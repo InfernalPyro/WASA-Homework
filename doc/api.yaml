@@ -5,11 +5,25 @@ info:
     Keep in touch with your friends by sharing photos of special moments, thanks to WASAPhoto! You can
     upload your photos directly from your PC, and they will be visible to everyone following you.
   version: "1"
-paths:
+servers:
+  - url: http://localhost:3000
 
+tags:
+  - name: "Login"
+    description: Endpoint for Login operation
+  - name: "User"
+    description: Endpoint for Account operations
+  - name: "Profile"
+    description: Endpoint to Manage the logged user's profile and their photos
+  - name: "User operations"
+    description: Endpoint for operations about other users 
+  - name: "Photo"
+    description: Endpoint for other users photo
+
+paths:
   /session:
     post:
-      tags: ["login"]
+      tags: ["Login"]
       operationId: doLogin
       summary: Logs in the user
       description: |-
@@ -37,7 +51,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  userId:
+                  identifier:
                     type: integer
                     example: 10  
 
@@ -178,13 +192,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  username:
-                    type: string
-                    minLength : 3
-                    maxLength : 15
-                    example: new Name
+                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged
         '401':
@@ -223,9 +231,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array    
-                items:    
-                  $ref: '#/components/schemas/Photo'
+                $ref: '#/components/schemas/Photo'
         '400':
           description: User is not logged 
         '401':
@@ -258,6 +264,8 @@ paths:
             application/json:
               schema:
                 type: array    
+                minItems : 0
+                maxItems : 100
                 items:    
                   $ref: '#/components/schemas/Photo'
         '400':
@@ -300,9 +308,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array    
-                items:    
-                  $ref: '#/components/schemas/Photo'
+                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged  
         '401':
@@ -333,8 +339,8 @@ paths:
           description: successful operation
           content:
             application/json:
-               schema:
-                 $ref: '#/components/schemas/Photo'
+              schema:
+                $ref: '#/components/schemas/Photo'
         '400':
           description: User is not logged 
         '401':
@@ -377,9 +383,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array    
-                items:    
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged  
         '404':
@@ -394,26 +398,24 @@ paths:
       description: |-
            An user can unfollow another user
       parameters: 
-          - in: path
-            name: followId 
-            required: true
-            schema:
-              type: integer
-              format: int64
-            description: The user to unfollow Id
+        - in: path
+          name: followId 
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The user to unfollow Id
       responses:
-            '200':
-              description: User removed from follow list
-              content:
-                application/json:
-                  schema:
-                    type: array    
-                    items:    
-                      $ref: '#/components/schemas/User'
-            '400':
-              description: User is not logged  
-            '404':
-              description: User not found
+        '200':
+          description: User removed from follow list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: User is not logged  
+        '404':
+          description: User not found
       security:
         - Authentication: []
 
@@ -448,9 +450,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array    
-                items:    
-                  $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged  
         '404':
@@ -473,18 +473,16 @@ paths:
               format: int64
             description: The user to unban Id
       responses:
-            '200':
-              description: User removed from banned list
-              content:
-                application/json:
-                  schema:
-                    type: array    
-                    items:    
-                      $ref: '#/components/schemas/User'
-            '400':
-              description: User is not logged  
-            '404':
-              description: User not found
+        '200':
+          description: User removed from banned list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: User is not logged  
+        '404':
+          description: User not found
       security:
         - Authentication: []
 
@@ -521,9 +519,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array    
-                items:    
-                  $ref: '#/components/schemas/Photo'
+                $ref: '#/components/schemas/Photo'
         '400':
           description: User is not logged 
         '401':
@@ -548,20 +544,18 @@ paths:
               format: int64
             description: The photo to unlike Id's
       responses:
-            '200':
-              description: Photo Unliked
-              content:
-                application/json:
-                  schema:
-                    type: array    
-                    items:    
-                      $ref: '#/components/schemas/Photo'
-            '400':
-              description: User is not logged 
-            '401':
-              description: Photo not found
-            '404':
-              description: User not found
+        '200':
+          description: Photo Unliked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
+        '400':
+          description: User is not logged 
+        '401':
+          description: Photo not found
+        '404':
+          description: User not found
       security:
         - Authentication: []
 
@@ -605,9 +599,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array    
-                items:    
-                  $ref: '#/components/schemas/Comment'
+                $ref: '#/components/schemas/Comment'
         '400':
           description: User is not logged
         '401':
@@ -646,9 +638,7 @@ paths:
               content:
                 application/json:
                   schema:
-                    type: array    
-                    items:    
-                      $ref: '#/components/schemas/Comment'
+                    $ref: '#/components/schemas/Comment'
             '400':
               description: User is not logged
             '401':
@@ -683,6 +673,8 @@ paths:
             application/json:
                schema:
                 type: array
+                minItems : 0
+                maxItems : 100
                 items:
                   $ref: '#/components/schemas/Comment'
         '400':
@@ -702,16 +694,21 @@ components:
       type: object
       properties:
         userId:
+          description: The user's id 
           type: integer
           format: int64
           example: 10
         username:
+          description: The user's username
           type: string
           minLength : 3
           maxLength : 15
           example: MyName
         follows: 
+          description: List of users that follows the user
           type: array
+          minItems : 0
+          maxItems : 100
           items: 
             $ref: '#/components/schemas/User'
           example:
@@ -720,21 +717,30 @@ components:
             - id: 12
               username: Carlo
         followers: 
+          description: List of users that the user follows
           type: array
+          minItems : 0
+          maxItems : 100
           items: 
             $ref: '#/components/schemas/User'
           example:
             - id: 13
               username: Lucia
         banned: 
+          description: List of users that the user banned
           type: array
+          minItems : 0
+          maxItems : 100
           items: 
             $ref: '#/components/schemas/User'
           example:
             - id: 9
               username: Luca
         photos: 
+          description: List of all the photos the user published
           type: array
+          minItems : 0
+          maxItems : 100
           items: 
             $ref: '#/components/schemas/Photo'
       xml:
@@ -744,29 +750,39 @@ components:
       type: object
       properties:
         photoId:  
+          description: Id of the photo
           type: integer
           format: int64
           example: 72
         userId:
+          description: Id of the user that published the photo
           type: integer
           format: int64
           example: 10
         image:
+          description: The actual photo
           type: string
           format: binary
           example: this contains the photo
         time:
+          description: Time at which the photo ha been published
           type: string
           format: date-time
           example: 2017-07-21T17:32:28Z
         likes:
+          description: List of all the user's ids that liked this photo
           type: array
           items:
             type: integer
             format: int64
             example: 10
+          minItems : 0
+          maxItems : 100
         comments:
+          description: List of every comment published on this photo
           type: array
+          minItems : 0
+          maxItems : 100
           items:
             $ref: '#/components/schemas/Comment'
       xml:
@@ -776,24 +792,31 @@ components:
       type: object
       properties:
         commentId:
+          description: Id of this comment
           type: integer
           format: int64
           example: 3
         photoId:
+          description: Id of the photo on which this comment has been published
           type: integer
           format: int64
           example: 72
         userId:
+          description: Id of the user that published this comment
           type: integer
           format: int64
           example: 10
         comment:
+          description: The actual comment
           type: string
+          minLength : 1
+          maxLength : 100
           example: This is a comment
         time:
+          description: Time at which the comment has been published
           type: string
           format: date-time
-          example: 2022-11-10T117:32:28Z
+          example: 2017-07-21T17:32:28Z
       xml:
         name: comment
 
@@ -801,7 +824,10 @@ components:
       type: object
       properties:
         photos:
+          description: List of all the photo that rapresents the stream
           type: array
+          minItems : 0
+          maxItems : 100
           items: 
             $ref: '#/components/schemas/Photo'
       xml:
