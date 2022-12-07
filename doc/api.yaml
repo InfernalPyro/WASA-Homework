@@ -487,10 +487,10 @@ paths:
         - Authentication: []
 
 
-  /user/{userId}/photo/{photoId}/likes:   
+  /user/{profileId}/photo/{photoId}/likes/:   
     parameters: 
       - name: userId
-        in: path
+        in: query
         description: |-
          The id of the logged user that will be added or removed from the photo likes list
         required: true
@@ -513,6 +513,13 @@ paths:
             type: integer
             format: int64
           description: The photo to like Id's
+        - in: path
+          name: profileId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: Id of the owner of the photo
       responses:
         '200':
           description: Photo liked
@@ -529,6 +536,7 @@ paths:
       security:
         - Authentication: []
 
+  /user/{profileId}/photo/{photoId}/likes/{userId}:
     delete:
       tags: ["Photo"]
       operationId: unlikePhoto
@@ -543,6 +551,13 @@ paths:
               type: integer
               format: int64
             description: The photo to unlike Id's
+          - in: path
+            name: profileId
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: Id of the owner of the photo
       responses:
         '200':
           description: Photo Unliked
@@ -559,16 +574,7 @@ paths:
       security:
         - Authentication: []
 
-  /user/{userId}/photo/{photoId}/comments:      
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+  /user/{profileId}/photo/{photoId}/comments/:      
 
     put:
       tags: ["Photo"]
@@ -584,6 +590,13 @@ paths:
             type: integer
             format: int64
           description: The photo to comment Id's
+        - in: path
+          name: profileId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: Id of the owner of the photo
       requestBody:
         description: Add a comment to the photo comments list
         content:
@@ -611,6 +624,8 @@ paths:
       security:
         - Authentication: []
 
+  /user/{profileId}/photo/{photoId}/comments/{commentId}: 
+
     delete:
       tags: ["Photo"]
       operationId: uncommentPhoto
@@ -625,13 +640,20 @@ paths:
               type: integer
               format: int64
             description: The photo with the comment Id's      
-          - in: query   
+          - in: path   
             name: commentId 
             required: true
             schema:
               type: integer
               format: int64
             description: The comment to delete Id's
+          - in: path
+            name: profileId
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: Id of the owner of the photo
       responses:
             '200':
               description: Comment deleted
@@ -650,7 +672,7 @@ paths:
       security:
         - Authentication: []
   
-  /photo/{photoId}/comments:
+  /photo/{photoId}/comments/:
     get:       
       tags: ["Photo"]
       operationId: getAllComments
@@ -754,7 +776,7 @@ components:
           type: integer
           format: int64
           example: 72
-        userId:
+        profileId:
           description: Id of the user that published the photo
           type: integer
           format: int64
