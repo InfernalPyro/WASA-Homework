@@ -4,7 +4,7 @@ info:
   description: |-
     Keep in touch with your friends by sharing photos of special moments, thanks to WASAPhoto! You can
     upload your photos directly from your PC, and they will be visible to everyone following you.
-  version: "1"
+  version: 1.0.0
 servers:
   - url: http://localhost:3000
 
@@ -55,6 +55,7 @@ paths:
                     type: integer
                     example: 10  
 
+
   /user/{userId}:  
     parameters: 
       - name: userId
@@ -78,15 +79,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged  
         '404':
           description: User not found
       security:
         - Authentication: []
+
 
   /user/{userId}/profile: 
     parameters: 
@@ -111,15 +110,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/User'
         '400':
           description: Invalid username supplied
         '404':
           description: User not found
       security:
         - Authentication: []
+
 
   /user/{userId}/home:
     parameters: 
@@ -146,9 +143,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Stream'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Stream'
         '400':
           description: User is not logged
         '404':
@@ -180,11 +174,13 @@ paths:
             schema:
                 type: object
                 properties:
-                  username:
+                  newUsername:
+                    description: The new username
                     type: string
                     minLength : 3
                     maxLength : 15
-                    example: new Name
+                    example: MyName
+                    pattern: "^[a-zA-Z0-9 ]*$"
         required: true
       responses:
         '200':
@@ -202,7 +198,8 @@ paths:
       security:
         - Authentication: []
 
-  /user/{userId}/uploadPhoto:
+
+  /user/{userId}/photo/:
     parameters: 
       - name: userId
         in: path
@@ -240,17 +237,6 @@ paths:
           description: User not found
       security:
         - Authentication: []
-
-  /user/{userId}/photo:
-    parameters: 
-      - name: userId
-        in: path
-        description: ID of the user whose photos we want to get
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
     get:       
       tags: ["Profile"]
       operationId: getAllPhoto
@@ -276,6 +262,7 @@ paths:
           description: User not found
       security:
         - Authentication: []
+
 
   /user/{userId}/photo/{photoId}:
     parameters: 
@@ -318,37 +305,37 @@ paths:
       security:
         - Authentication: []
 
-  /photo/{photoId}:
-    get:       
-      tags: ["Profile"]
-      operationId: getPhoto
-      summary: Get a single photo 
-      description: |-
-       Return photo specified by photoId
-      parameters:
-        - name: photoId
-          in: path
-          description: Id of the photo to get
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 5
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Photo'
-        '400':
-          description: User is not logged 
-        '401':
-          description: Photo cannot be found
-        '404':
-          description: User not found
-      security:
-        - Authentication: []
+  #/photo/{photoId}:
+  #  get:       
+  #    tags: ["Profile"]
+  #    operationId: getPhoto
+  #    summary: Get a single photo 
+  #    description: |-
+  #     Return photo specified by photoId
+  #    parameters:
+  #      - name: photoId
+  #        in: path
+  #        description: Id of the photo to get
+  #        required: true
+  #        schema:
+  #          type: integer
+  #          format: int64
+  #          example: 5
+  #    responses:
+  #      '200':
+  #        description: successful operation
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/Photo'
+  #      '400':
+  #        description: User is not logged 
+  #      '401':
+  #        description: Photo cannot be found
+  #      '404':
+  #        description: User not found
+  #    security:
+  #      - Authentication: []
 
 
 
@@ -488,16 +475,6 @@ paths:
 
 
   /user/{profileId}/photo/{photoId}/likes/:   
-    parameters: 
-      - name: userId
-        in: query
-        description: |-
-         The id of the logged user that will be added or removed from the photo likes list
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
 
     put:
       tags: ["Photo"]
@@ -520,6 +497,15 @@ paths:
             type: integer
             format: int64
           description: Id of the owner of the photo
+        - name: userId
+          in: query
+          description: |-
+           The id of the logged user that will be added or removed from the photo likes list
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 10
       responses:
         '200':
           description: Photo liked
@@ -551,6 +537,7 @@ paths:
               type: integer
               format: int64
             description: The photo to unlike Id's
+          
           - in: path
             name: profileId
             required: true
@@ -558,6 +545,16 @@ paths:
               type: integer
               format: int64
             description: Id of the owner of the photo
+
+          - name: userId
+            in: path
+            description: |-
+             The id of the logged user that will be added or removed from the photo likes list
+            required: true
+            schema:
+              type: integer
+              format: int64
+              example: 10
       responses:
         '200':
           description: Photo Unliked
@@ -584,28 +581,27 @@ paths:
         An user can make a comment on any photo
       parameters: 
         - in: path
-          name: photoId
-          required: true
-          schema:
-            type: integer
-            format: int64
-          description: The photo to comment Id's
-        - in: path
           name: profileId
           required: true
           schema:
             type: integer
             format: int64
           description: Id of the owner of the photo
+
+        - in: path
+          name: photoId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The photo to comment Id's
+
       requestBody:
         description: Add a comment to the photo comments list
         content:
           application/json:
               schema:
                 $ref: '#/components/schemas/Comment'          
-          application/xml:
-              schema:
-                $ref: '#/components/schemas/Comment'
       responses:
         '200':
           description: Comment added to photo
@@ -632,21 +628,7 @@ paths:
       summary: Delete a comment
       description: |-
            An user can delete any comments they made
-      parameters:    
-          - in: path
-            name: photoId
-            required: true
-            schema:
-              type: integer
-              format: int64
-            description: The photo with the comment Id's      
-          - in: path   
-            name: commentId 
-            required: true
-            schema:
-              type: integer
-              format: int64
-            description: The comment to delete Id's
+      parameters:   
           - in: path
             name: profileId
             required: true
@@ -654,21 +636,38 @@ paths:
               type: integer
               format: int64
             description: Id of the owner of the photo
+
+          - in: path
+            name: photoId
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: The photo with the comment Id's    
+
+          - in: path   
+            name: commentId 
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: The comment to delete Id's
+          
       responses:
-            '200':
-              description: Comment deleted
-              content:
-                application/json:
-                  schema:
-                    $ref: '#/components/schemas/Comment'
-            '400':
-              description: User is not logged
-            '401':
-              description: Photo not found
-            '402':
-              description: Comment not found
-            '404':
-              description: User not found
+        '200':
+          description: Comment deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: User is not logged
+        '401':
+          description: Photo not found
+        '402':
+          description: Comment not found
+        '404':
+          description: User not found
       security:
         - Authentication: []
   
@@ -712,7 +711,9 @@ paths:
 
 components:
   schemas:
+    
     User:
+      description: A single user of the platform
       type: object
       properties:
         userId:
@@ -720,44 +721,57 @@ components:
           type: integer
           format: int64
           example: 10
+        
         username:
           description: The user's username
           type: string
           minLength : 3
           maxLength : 15
           example: MyName
+          pattern: "^[a-zA-Z0-9 ]*$"
+        
         follows: 
-          description: List of users that follows the user
+          description: List of ids of every user that follows this user
           type: array
           minItems : 0
           maxItems : 100
           items: 
-            $ref: '#/components/schemas/User'
-          example:
+            type: object
+            properties:
+              id:
+                type: integer
+          example: 
             - id: 11
-              username: Marco
             - id: 12
-              username: Carlo
+
         followers: 
-          description: List of users that the user follows
+          description: List of ids of every user that this user follows
           type: array
           minItems : 0
           maxItems : 100
           items: 
-            $ref: '#/components/schemas/User'
-          example:
-            - id: 13
-              username: Lucia
+            type: object
+            properties:
+              id:
+                type: integer
+          example: 
+            - id: 11
+            - id: 12
+
         banned: 
-          description: List of users that the user banned
+          description: List of ids of every user that this user banned
           type: array
           minItems : 0
           maxItems : 100
           items: 
-            $ref: '#/components/schemas/User'
-          example:
-            - id: 9
-              username: Luca
+            type: object
+            properties:
+              id:
+                type: integer
+          example: 
+            - id: 11
+            - id: 12
+              
         photos: 
           description: List of all the photos the user published
           type: array
@@ -765,41 +779,49 @@ components:
           maxItems : 100
           items: 
             $ref: '#/components/schemas/Photo'
-      xml:
-        name: user
+
     
     Photo:
+      description: A photo uploaded by an user
       type: object
       properties:
+        
         photoId:  
           description: Id of the photo
           type: integer
           format: int64
           example: 72
+        
         profileId:
           description: Id of the user that published the photo
           type: integer
           format: int64
           example: 10
+
         image:
           description: The actual photo
           type: string
           format: binary
           example: this contains the photo
+
         time:
           description: Time at which the photo ha been published
           type: string
           format: date-time
           example: 2017-07-21T17:32:28Z
+
         likes:
           description: List of all the user's ids that liked this photo
           type: array
-          items:
-            type: integer
-            format: int64
-            example: 10
-          minItems : 0
-          maxItems : 100
+          items: 
+            type: object
+            properties:
+              id:
+                type: integer
+          example: 
+            - id: 11
+            - id: 12
+
         comments:
           description: List of every comment published on this photo
           type: array
@@ -807,44 +829,51 @@ components:
           maxItems : 100
           items:
             $ref: '#/components/schemas/Comment'
-      xml:
-        name: photo
+    
 
     Comment:
+      description: A comment made by an user
       type: object
       properties:
+
         commentId:
           description: Id of this comment
           type: integer
           format: int64
           example: 3
+
         photoId:
           description: Id of the photo on which this comment has been published
           type: integer
           format: int64
           example: 72
+
         userId:
           description: Id of the user that published this comment
           type: integer
           format: int64
           example: 10
+
         comment:
           description: The actual comment
           type: string
           minLength : 1
           maxLength : 100
           example: This is a comment
+          pattern: "^[a-zA-Z0-9 ]*$"
+        
         time:
           description: Time at which the comment has been published
           type: string
           format: date-time
           example: 2017-07-21T17:32:28Z
-      xml:
-        name: comment
+
 
     Stream:
+      description: Stream of photos. Rapresents the "home page" of an user
       type: object
       properties:
+
         photos:
           description: List of all the photo that rapresents the stream
           type: array
@@ -852,8 +881,7 @@ components:
           maxItems : 100
           items: 
             $ref: '#/components/schemas/Photo'
-      xml:
-        name: stream
+
   
   securitySchemes:
     Authentication:     
