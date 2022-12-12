@@ -36,16 +36,38 @@ import (
 	"fmt"
 )
 
+var UserDoesNotExist = errors.New("user does not exist")
+
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 	GetName() (string, error)
 	SetName(name string) error
+
+	LoginUser(username string) (int64, error)
+	changeUsername(id int64, newUsername string) (User, error)
 
 	Ping() error
 }
 
 type appdbimpl struct {
 	c *sql.DB
+}
+
+type Photo struct {
+	photoID   uint64
+	profileId uint64
+	image     []string
+	time      string
+	likes     []uint64
+}
+
+type User struct {
+	ID        uint64
+	username  string
+	follows   []uint64
+	followers []uint64
+	banned    []uint64
+	photos    []Photo
 }
 
 // New returns a new instance of AppDatabase based on the SQLite connection `db`.

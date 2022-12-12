@@ -4,12 +4,26 @@ info:
   description: |-
     Keep in touch with your friends by sharing photos of special moments, thanks to WASAPhoto! You can
     upload your photos directly from your PC, and they will be visible to everyone following you.
-  version: "1"
-paths:
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
 
+tags:
+  - name: "Login"
+    description: Endpoint for Login operation
+  - name: "User"
+    description: Endpoint for Account operations
+  - name: "Profile"
+    description: Endpoint to Manage the logged user's profile and their photos
+  - name: "User operations"
+    description: Endpoint for operations about other users 
+  - name: "Photo"
+    description: Endpoint for other users photo
+
+paths:
   /session:
     post:
-      tags: ["login"]
+      tags: ["Login"]
       operationId: doLogin
       summary: Logs in the user
       description: |-
@@ -26,7 +40,6 @@ paths:
                   name:
                     type: string
                     example: Maria
-                    pattern: 'ˆ.*?$'
                     minLength: 3
                     maxLength: 16
         required: true
@@ -39,36 +52,40 @@ paths:
                 type: object
                 properties:
                   identifier:
-                    # change here if you decide to use an integer
-                    # or any other type of identifier
-                    type: string
-                    example: "abcdef012345"
+                    type: integer
+                    example: 10  
 
-  /user/{userId}:  
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user to delete
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
-    delete:       
-      tags: ["User"]
-      operationId: deleteUser
-      summary: Delete account
-      description: |-
-        A logged user can delete their account.
-      responses:
-        '200':
-          description: Account deleted
-        '400':
-          description: User is not logged  
-        '404':
-          description: User not found
-      security:
-        - Authentication: []
+
+  ##/user/{userId}:  
+  ##  parameters: 
+  ##    - name: userId
+  ##      in: path
+  ##      description: The id of the logged user to delete
+  ##      required: true
+  ##      schema:
+  ##        type: integer
+  ##        format: int64
+  ##        example: 10
+  ##  delete:       
+  ##    tags: ["User"]
+  ##    operationId: deleteUser
+  ##    summary: Delete account
+  ##    description: |-
+  ##      A logged user can delete their account.
+  ##    responses:
+  ##      '200':
+  ##        description: Account deleted
+  ##        content:
+  ##          application/json:
+  ##            schema:
+  ##              $ref: '#/components/schemas/User'          
+  ##      '400':
+  ##        description: User is not logged  
+  ##      '404':
+  ##        description: User not found
+  ##    security:
+  ##      - Authentication: []
+
 
   /user/{userId}/profile: 
     parameters: 
@@ -93,15 +110,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/User'
         '400':
           description: Invalid username supplied
         '404':
           description: User not found
       security:
         - Authentication: []
+
 
   /user/{userId}/home:
     parameters: 
@@ -128,9 +143,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Stream'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Stream'
         '400':
           description: User is not logged
         '404':
@@ -162,15 +174,21 @@ paths:
             schema:
                 type: object
                 properties:
-                  username:
+                  newUsername:
+                    description: The new username
                     type: string
                     minLength : 3
                     maxLength : 15
-                    example: new Name
+                    example: MyName
+                    pattern: "^[a-zA-Z0-9 ]*$"
         required: true
       responses:
         '200':
           description: Username updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged
         '401':
@@ -180,7 +198,8 @@ paths:
       security:
         - Authentication: []
 
-  /user/{userId}/uploadPhoto:
+
+  /user/{userId}/photo/:
     parameters: 
       - name: userId
         in: path
@@ -204,8 +223,12 @@ paths:
               type: string
               format: binary
       responses:
-        '200':
+        '201':
           description: Photo uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
         '400':
           description: User is not logged 
         '401':
@@ -214,17 +237,6 @@ paths:
           description: User not found
       security:
         - Authentication: []
-
-  /user/{userId}/photo:
-    parameters: 
-      - name: userId
-        in: path
-        description: ID of the user whose photos we want to get
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
     get:       
       tags: ["Profile"]
       operationId: getAllPhoto
@@ -238,6 +250,8 @@ paths:
             application/json:
               schema:
                 type: array    
+                minItems : 0
+                maxItems : 100
                 items:    
                   $ref: '#/components/schemas/Photo'
         '400':
@@ -248,6 +262,7 @@ paths:
           description: User not found
       security:
         - Authentication: []
+
 
   /user/{userId}/photo/{photoId}:
     parameters: 
@@ -277,6 +292,10 @@ paths:
       responses:
         '200':
           description: Photo deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged  
         '401':
@@ -286,41 +305,41 @@ paths:
       security:
         - Authentication: []
 
-  /photo/{photoId}:
-    get:       
-      tags: ["Profile"]
-      operationId: getPhoto
-      summary: Get a single photo 
-      description: |-
-       Return photo specified by photoId
-      parameters:
-        - name: photoId
-          in: path
-          description: Id of the photo to get
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 5
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-               schema:
-                 $ref: '#/components/schemas/Photo'
-        '400':
-          description: User is not logged 
-        '401':
-          description: Photo cannot be found
-        '404':
-          description: User not found
-      security:
-        - Authentication: []
+  #/photo/{photoId}:
+  #  get:       
+  #    tags: ["Profile"]
+  #    operationId: getPhoto
+  #    summary: Get a single photo 
+  #    description: |-
+  #     Return photo specified by photoId
+  #    parameters:
+  #      - name: photoId
+  #        in: path
+  #        description: Id of the photo to get
+  #        required: true
+  #        schema:
+  #          type: integer
+  #          format: int64
+  #          example: 5
+  #    responses:
+  #      '200':
+  #        description: successful operation
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/Photo'
+  #      '400':
+  #        description: User is not logged 
+  #      '401':
+  #        description: Photo cannot be found
+  #      '404':
+  #        description: User not found
+  #    security:
+  #      - Authentication: []
 
 
 
-  /user/{userId}/follow:  
+  /user/{userId}/follow/{followId}:  
     parameters: 
       - name: userId
         in: path
@@ -338,7 +357,7 @@ paths:
       description: |-
         An user can follow another user while on their profile page
       parameters: 
-        - in: query
+        - in: path
           name: followId
           required: true
           schema:
@@ -348,6 +367,10 @@ paths:
       responses:
         '200':
           description: User added to follow list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged  
         '404':
@@ -362,24 +385,28 @@ paths:
       description: |-
            An user can unfollow another user
       parameters: 
-          - in: query
-            name: followId 
-            required: true
-            schema:
-              type: integer
-              format: int64
-            description: The user to unfollow Id
+        - in: path
+          name: followId 
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The user to unfollow Id
       responses:
-            '200':
-              description: User removed from follow list
-            '400':
-              description: User is not logged  
-            '404':
-              description: User not found
+        '200':
+          description: User removed from follow list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: User is not logged  
+        '404':
+          description: User not found
       security:
         - Authentication: []
 
-  /user/{userId}/ban:      
+  /user/{userId}/ban/{banId}:      
     parameters: 
       - name: userId
         in: path
@@ -397,7 +424,7 @@ paths:
       description: |-
         An user can ban another user, blocking them from seeing their profile
       parameters: 
-        - in: query
+        - in: path
           name: banId 
           required: true
           schema:
@@ -407,6 +434,10 @@ paths:
       responses:
         '200':
           description: User added to banned list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged  
         '404':
@@ -421,7 +452,7 @@ paths:
       description: |-
            An user can unban another user
       parameters: 
-          - in: query
+          - in: path
             name: banId
             required: true
             schema:
@@ -429,26 +460,21 @@ paths:
               format: int64
             description: The user to unban Id
       responses:
-            '200':
-              description: User removed from banned list
-            '400':
-              description: User is not logged  
-            '404':
-              description: User not found
+        '200':
+          description: User removed from banned list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: User is not logged  
+        '404':
+          description: User not found
       security:
         - Authentication: []
 
 
-  /user/{userId}/{photoId}:   
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+  /user/{profileId}/photo/{photoId}/likes/:   
 
     put:
       tags: ["Photo"]
@@ -464,9 +490,29 @@ paths:
             type: integer
             format: int64
           description: The photo to like Id's
+        - in: path
+          name: profileId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: Id of the owner of the photo
+        - name: userId
+          in: query
+          description: |-
+           The id of the logged user that will be added or removed from the photo likes list
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 10
       responses:
         '200':
           description: Photo liked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
         '400':
           description: User is not logged 
         '401':
@@ -476,6 +522,7 @@ paths:
       security:
         - Authentication: []
 
+  /user/{profileId}/photo/{photoId}/likes/{userId}:
     delete:
       tags: ["Photo"]
       operationId: unlikePhoto
@@ -490,28 +537,41 @@ paths:
               type: integer
               format: int64
             description: The photo to unlike Id's
+          
+          - in: path
+            name: profileId
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: Id of the owner of the photo
+
+          - name: userId
+            in: path
+            description: |-
+             The id of the logged user that will be added or removed from the photo likes list
+            required: true
+            schema:
+              type: integer
+              format: int64
+              example: 10
       responses:
-            '200':
-              description: Photo Unliked
-            '400':
-              description: User is not logged 
-            '401':
-              description: Photo not found
-            '404':
-              description: User not found
+        '200':
+          description: Photo Unliked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
+        '400':
+          description: User is not logged 
+        '401':
+          description: Photo not found
+        '404':
+          description: User not found
       security:
         - Authentication: []
 
-  /user/{userId}/{photoId}/comments:      
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+  /user/{profileId}/photo/{photoId}/comments/:      
 
     put:
       tags: ["Photo"]
@@ -521,24 +581,34 @@ paths:
         An user can make a comment on any photo
       parameters: 
         - in: path
+          name: profileId
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: Id of the owner of the photo
+
+        - in: path
           name: photoId
           required: true
           schema:
             type: integer
             format: int64
           description: The photo to comment Id's
+
       requestBody:
         description: Add a comment to the photo comments list
         content:
           application/json:
               schema:
                 $ref: '#/components/schemas/Comment'          
-          application/xml:
-              schema:
-                $ref: '#/components/schemas/Comment'
       responses:
         '200':
           description: Comment added to photo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
         '400':
           description: User is not logged
         '401':
@@ -550,42 +620,58 @@ paths:
       security:
         - Authentication: []
 
+  /user/{profileId}/photo/{photoId}/comments/{commentId}: 
+
     delete:
       tags: ["Photo"]
       operationId: uncommentPhoto
       summary: Delete a comment
       description: |-
            An user can delete any comments they made
-      parameters:    
+      parameters:   
+          - in: path
+            name: profileId
+            required: true
+            schema:
+              type: integer
+              format: int64
+            description: Id of the owner of the photo
+
           - in: path
             name: photoId
             required: true
             schema:
               type: integer
               format: int64
-            description: The photo with the comment Id's      
-          - in: query   
+            description: The photo with the comment Id's    
+
+          - in: path   
             name: commentId 
             required: true
             schema:
               type: integer
               format: int64
             description: The comment to delete Id's
+          
       responses:
-            '200':
-              description: Comment deleted
-            '400':
-              description: User is not logged
-            '401':
-              description: Photo not found
-            '402':
-              description: Comment not found
-            '404':
-              description: User not found
+        '200':
+          description: Comment deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: User is not logged
+        '401':
+          description: Photo not found
+        '402':
+          description: Comment not found
+        '404':
+          description: User not found
       security:
         - Authentication: []
   
-  /photo/{photoId}/comments:
+  /photo/{photoId}/comments/:
     get:       
       tags: ["Photo"]
       operationId: getAllComments
@@ -608,6 +694,8 @@ paths:
             application/json:
                schema:
                 type: array
+                minItems : 0
+                maxItems : 100
                 items:
                   $ref: '#/components/schemas/Comment'
         '400':
@@ -623,111 +711,177 @@ paths:
 
 components:
   schemas:
+    
     User:
+      description: A single user of the platform
       type: object
       properties:
         userId:
+          description: The user's id 
           type: integer
           format: int64
           example: 10
+        
         username:
+          description: The user's username
           type: string
           minLength : 3
           maxLength : 15
           example: MyName
+          pattern: "^[a-zA-Z0-9 ]*$"
+        
         follows: 
+          description: List of ids of every user that follows this user
           type: array
+          minItems : 0
+          maxItems : 100
           items: 
-            $ref: '#/components/schemas/User'
-          example:
+            type: object
+            properties:
+              id:
+                type: integer
+          example: 
             - id: 11
-              username: Marco
             - id: 12
-              username: Carlo
+
         followers: 
+          description: List of ids of every user that this user follows
           type: array
+          minItems : 0
+          maxItems : 100
           items: 
-            $ref: '#/components/schemas/User'
-          example:
-            - id: 13
-              username: Lucia
+            type: object
+            properties:
+              id:
+                type: integer
+          example: 
+            - id: 11
+            - id: 12
+
         banned: 
+          description: List of ids of every user that this user banned
           type: array
+          minItems : 0
+          maxItems : 100
           items: 
-            $ref: '#/components/schemas/User'
-          example:
-            - id: 9
-              username: Luca
+            type: object
+            properties:
+              id:
+                type: integer
+          example: 
+            - id: 11
+            - id: 12
+              
         photos: 
+          description: List of all the photos the user published
           type: array
+          minItems : 0
+          maxItems : 100
           items: 
             $ref: '#/components/schemas/Photo'
-      xml:
-        name: user
+
     
     Photo:
+      description: A photo uploaded by an user
       type: object
       properties:
+        
         photoId:  
+          description: Id of the photo
           type: integer
           format: int64
           example: 72
-        userId:
+        
+        profileId:
+          description: Id of the user that published the photo
           type: integer
           format: int64
           example: 10
+
         image:
+          description: The actual photo
           type: string
           format: binary
+          example: this contains the photo
+
         time:
+          description: Time at which the photo ha been published
           type: string
           format: date-time
-          example: 2022-11-10T117:32:28Z
+          example: 2017-07-21T17:32:28Z
+
         likes:
-          type: integer
-          format: int64
-          example: 132
-        comments:
+          description: List of all the user's ids that liked this photo
           type: array
+          items: 
+            type: object
+            properties:
+              id:
+                type: integer
+          example: 
+            - id: 11
+            - id: 12
+
+        comments:
+          description: List of every comment published on this photo
+          type: array
+          minItems : 0
+          maxItems : 100
           items:
             $ref: '#/components/schemas/Comment'
-      xml:
-        name: photo
+    
 
     Comment:
+      description: A comment made by an user
       type: object
       properties:
+
         commentId:
+          description: Id of this comment
           type: integer
           format: int64
           example: 3
+
         photoId:
+          description: Id of the photo on which this comment has been published
           type: integer
           format: int64
           example: 72
+
         userId:
+          description: Id of the user that published this comment
           type: integer
           format: int64
           example: 10
+
         comment:
+          description: The actual comment
           type: string
+          minLength : 1
+          maxLength : 100
           example: This is a comment
+          pattern: "^[a-zA-Z0-9 ]*$"
+        
         time:
+          description: Time at which the comment has been published
           type: string
           format: date-time
-          example: 2022-11-10T117:32:28Z
-      xml:
-        name: comment
+          example: 2017-07-21T17:32:28Z
+
 
     Stream:
+      description: Stream of photos. Rapresents the "home page" of an user
       type: object
       properties:
+
         photos:
+          description: List of all the photo that rapresents the stream
           type: array
+          minItems : 0
+          maxItems : 100
           items: 
             $ref: '#/components/schemas/Photo'
-      xml:
-        name: stream
+
   
   securitySchemes:
     Authentication:     

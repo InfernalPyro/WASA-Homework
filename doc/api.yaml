@@ -56,35 +56,35 @@ paths:
                     example: 10  
 
 
-  /user/{userId}:  
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user to delete
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
-    delete:       
-      tags: ["User"]
-      operationId: deleteUser
-      summary: Delete account
-      description: |-
-        A logged user can delete their account.
-      responses:
-        '200':
-          description: Account deleted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'          
-        '400':
-          description: User is not logged  
-        '404':
-          description: User not found
-      security:
-        - Authentication: []
+  ##/user/{userId}:  
+  ##  parameters: 
+  ##    - name: userId
+  ##      in: path
+  ##      description: The id of the logged user to delete
+  ##      required: true
+  ##      schema:
+  ##        type: integer
+  ##        format: int64
+  ##        example: 10
+  ##  delete:       
+  ##    tags: ["User"]
+  ##    operationId: deleteUser
+  ##    summary: Delete account
+  ##    description: |-
+  ##      A logged user can delete their account.
+  ##    responses:
+  ##      '200':
+  ##        description: Account deleted
+  ##        content:
+  ##          application/json:
+  ##            schema:
+  ##              $ref: '#/components/schemas/User'          
+  ##      '400':
+  ##        description: User is not logged  
+  ##      '404':
+  ##        description: User not found
+  ##    security:
+  ##      - Authentication: []
 
 
   /user/{userId}/profile: 
