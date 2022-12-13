@@ -42,6 +42,7 @@ paths:
                     example: Maria
                     minLength: 3
                     maxLength: 16
+                    pattern: "^[a-zA-Z0-9 ]*$"
         required: true
       responses:
         '201':
@@ -222,6 +223,8 @@ paths:
             schema:
               type: string
               format: binary
+              minLength : 1
+              maxLength : 400000000
       responses:
         '201':
           description: Photo uploaded
@@ -237,31 +240,31 @@ paths:
           description: User not found
       security:
         - Authentication: []
-    get:       
-      tags: ["Profile"]
-      operationId: getAllPhoto
-      summary: Get all photos of user 
-      description: |-
-        Return entire collection of photos of the user specified in userId
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array    
-                minItems : 0
-                maxItems : 100
-                items:    
-                  $ref: '#/components/schemas/Photo'
-        '400':
-          description: User is not logged 
-        '401':
-          description: Photo cannot be found
-        '404':
-          description: User not found
-      security:
-        - Authentication: []
+    #get:       
+    #  tags: ["Profile"]
+    #  operationId: getAllPhoto
+    #  summary: Get all photos of user 
+    #  description: |-
+    #    Return entire collection of photos of the user specified in userId
+    #  responses:
+    #    '200':
+    #      description: successful operation
+    #      content:
+    #        application/json:
+    #          schema:
+    #            type: array    
+    #            minItems : 0
+    #            maxItems : 100
+    #            items:    
+    #              $ref: '#/components/schemas/Photo'
+    #    '400':
+    #      description: User is not logged 
+    #    '401':
+    #      description: Photo cannot be found
+    #    '404':
+    #      description: User not found
+    #  security:
+    #    - Authentication: []
 
 
   /user/{userId}/photo/{photoId}:
@@ -338,8 +341,7 @@ paths:
   #      - Authentication: []
 
 
-
-  /user/{userId}/follow/{followId}:  
+  /user/{userId}/follow/:  
     parameters: 
       - name: userId
         in: path
@@ -357,7 +359,7 @@ paths:
       description: |-
         An user can follow another user while on their profile page
       parameters: 
-        - in: path
+        - in: query
           name: followId
           required: true
           schema:
@@ -377,6 +379,18 @@ paths:
           description: User not found
       security:
         - Authentication: []
+
+
+  /user/{userId}/follow/{followId}:  
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
 
     delete:
       tags: ["User operations"]
@@ -406,7 +420,7 @@ paths:
       security:
         - Authentication: []
 
-  /user/{userId}/ban/{banId}:      
+  /user/{userId}/ban/:      
     parameters: 
       - name: userId
         in: path
@@ -424,7 +438,7 @@ paths:
       description: |-
         An user can ban another user, blocking them from seeing their profile
       parameters: 
-        - in: path
+        - in: query
           name: banId 
           required: true
           schema:
@@ -444,6 +458,17 @@ paths:
           description: User not found
       security:
         - Authentication: []
+
+  /user/{userId}/ban/{banId}:      
+    parameters: 
+      - name: userId
+        in: path
+        description: The id of the logged user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          example: 10
 
     delete:
       tags: ["User operations"]
@@ -671,41 +696,41 @@ paths:
       security:
         - Authentication: []
   
-  /photo/{photoId}/comments/:
-    get:       
-      tags: ["Photo"]
-      operationId: getAllComments
-      summary: Get all comments of photo
-      description: |-
-       Return every comment on the photo specified by photoId
-      parameters:
-        - name: photoId
-          in: path
-          description: Id of the photo to get
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 5
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-               schema:
-                type: array
-                minItems : 0
-                maxItems : 100
-                items:
-                  $ref: '#/components/schemas/Comment'
-        '400':
-          description: User is not logged 
-        '401':
-          description: Photo cannot be found
-        '404':
-          description: User not found
-      security:
-        - Authentication: []
+  #/photo/{photoId}/comments/:
+  #  get:       
+  #    tags: ["Photo"]
+  #    operationId: getAllComments
+  #    summary: Get all comments of photo
+  #    description: |-
+  #     Return every comment on the photo specified by photoId
+  #    parameters:
+  #      - name: photoId
+  #        in: path
+  #        description: Id of the photo to get
+  #        required: true
+  #        schema:
+  #          type: integer
+  #          format: int64
+  #          example: 5
+  #    responses:
+  #      '200':
+  #        description: successful operation
+  #        content:
+  #          application/json:
+  #             schema:
+  #              type: array
+  #              minItems : 0
+  #              maxItems : 100
+  #              items:
+  #                $ref: '#/components/schemas/Comment'
+  #      '400':
+  #        description: User is not logged 
+  #      '401':
+  #        description: Photo cannot be found
+  #      '404':
+  #        description: User not found
+  #    security:
+  #      - Authentication: []
       
 
 
@@ -734,49 +759,40 @@ components:
           description: List of ids of every user that follows this user
           type: array
           minItems : 0
-          maxItems : 100
+          maxItems : 1000
           items: 
-            type: object
-            properties:
-              id:
-                type: integer
+            type: integer
           example: 
-            - id: 11
-            - id: 12
+            -  11
+            -  12
 
         followers: 
           description: List of ids of every user that this user follows
           type: array
           minItems : 0
-          maxItems : 100
+          maxItems : 1000
           items: 
-            type: object
-            properties:
-              id:
-                type: integer
+            type: integer
           example: 
-            - id: 11
-            - id: 12
+            -  11
+            -  12
 
         banned: 
           description: List of ids of every user that this user banned
           type: array
           minItems : 0
-          maxItems : 100
+          maxItems : 1000
           items: 
-            type: object
-            properties:
-              id:
-                type: integer
+            type: integer
           example: 
-            - id: 11
-            - id: 12
+            -  11
+            -  12
               
         photos: 
           description: List of all the photos the user published
           type: array
           minItems : 0
-          maxItems : 100
+          maxItems : 1000
           items: 
             $ref: '#/components/schemas/Photo'
 
@@ -802,6 +818,8 @@ components:
           description: The actual photo
           type: string
           format: binary
+          minLength : 3
+          maxLength : 400000000
           example: this contains the photo
 
         time:
@@ -813,20 +831,19 @@ components:
         likes:
           description: List of all the user's ids that liked this photo
           type: array
+          minItems : 0
+          maxItems : 1000
           items: 
-            type: object
-            properties:
-              id:
-                type: integer
+            type: integer
           example: 
-            - id: 11
-            - id: 12
+            -  11
+            -  12
 
         comments:
           description: List of every comment published on this photo
           type: array
           minItems : 0
-          maxItems : 100
+          maxItems : 1000
           items:
             $ref: '#/components/schemas/Comment'
     

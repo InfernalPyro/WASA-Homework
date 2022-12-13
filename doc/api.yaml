@@ -57,37 +57,6 @@ paths:
                     example: 10  
 
 
-  ##/user/{userId}:  
-  ##  parameters: 
-  ##    - name: userId
-  ##      in: path
-  ##      description: The id of the logged user to delete
-  ##      required: true
-  ##      schema:
-  ##        type: integer
-  ##        format: int64
-  ##        example: 10
-  ##  delete:       
-  ##    tags: ["User"]
-  ##    operationId: deleteUser
-  ##    summary: Delete account
-  ##    description: |-
-  ##      A logged user can delete their account.
-  ##    responses:
-  ##      '200':
-  ##        description: Account deleted
-  ##        content:
-  ##          application/json:
-  ##            schema:
-  ##              $ref: '#/components/schemas/User'          
-  ##      '400':
-  ##        description: User is not logged  
-  ##      '404':
-  ##        description: User not found
-  ##    security:
-  ##      - Authentication: []
-
-
   /user/{userId}/profile: 
     parameters: 
       - name: userId
@@ -240,32 +209,6 @@ paths:
           description: User not found
       security:
         - Authentication: []
-    #get:       
-    #  tags: ["Profile"]
-    #  operationId: getAllPhoto
-    #  summary: Get all photos of user 
-    #  description: |-
-    #    Return entire collection of photos of the user specified in userId
-    #  responses:
-    #    '200':
-    #      description: successful operation
-    #      content:
-    #        application/json:
-    #          schema:
-    #            type: array    
-    #            minItems : 0
-    #            maxItems : 100
-    #            items:    
-    #              $ref: '#/components/schemas/Photo'
-    #    '400':
-    #      description: User is not logged 
-    #    '401':
-    #      description: Photo cannot be found
-    #    '404':
-    #      description: User not found
-    #  security:
-    #    - Authentication: []
-
 
   /user/{userId}/photo/{photoId}:
     parameters: 
@@ -307,38 +250,6 @@ paths:
           description: User not found
       security:
         - Authentication: []
-
-  #/photo/{photoId}:
-  #  get:       
-  #    tags: ["Profile"]
-  #    operationId: getPhoto
-  #    summary: Get a single photo 
-  #    description: |-
-  #     Return photo specified by photoId
-  #    parameters:
-  #      - name: photoId
-  #        in: path
-  #        description: Id of the photo to get
-  #        required: true
-  #        schema:
-  #          type: integer
-  #          format: int64
-  #          example: 5
-  #    responses:
-  #      '200':
-  #        description: successful operation
-  #        content:
-  #          application/json:
-  #            schema:
-  #              $ref: '#/components/schemas/Photo'
-  #      '400':
-  #        description: User is not logged 
-  #      '401':
-  #        description: Photo cannot be found
-  #      '404':
-  #        description: User not found
-  #    security:
-  #      - Authentication: []
 
 
   /user/{userId}/follow/:  
@@ -695,42 +606,6 @@ paths:
           description: User not found
       security:
         - Authentication: []
-  
-  #/photo/{photoId}/comments/:
-  #  get:       
-  #    tags: ["Photo"]
-  #    operationId: getAllComments
-  #    summary: Get all comments of photo
-  #    description: |-
-  #     Return every comment on the photo specified by photoId
-  #    parameters:
-  #      - name: photoId
-  #        in: path
-  #        description: Id of the photo to get
-  #        required: true
-  #        schema:
-  #          type: integer
-  #          format: int64
-  #          example: 5
-  #    responses:
-  #      '200':
-  #        description: successful operation
-  #        content:
-  #          application/json:
-  #             schema:
-  #              type: array
-  #              minItems : 0
-  #              maxItems : 100
-  #              items:
-  #                $ref: '#/components/schemas/Comment'
-  #      '400':
-  #        description: User is not logged 
-  #      '401':
-  #        description: Photo cannot be found
-  #      '404':
-  #        description: User not found
-  #    security:
-  #      - Authentication: []
       
 
 
