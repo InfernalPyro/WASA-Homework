@@ -1,0 +1,78 @@
+sqlite3 database.db
+pragma foreign_keys = on;
+
+
+create table user(
+	userId INTEGER PRIMARY KEY, 
+	username TEXT NOT NULL UNIQUE 
+	);
+
+create table follow(
+	userId INTEGER, 
+	follows INTEGER,
+   	PRIMARY KEY (userId, follows),
+   	FOREIGN KEY (userId) 
+    	REFERENCES user (userId) 
+        	ON DELETE CASCADE 
+        	ON UPDATE CASCADE,
+   	FOREIGN KEY (follows) 
+   	   	REFERENCES user (userId) 
+   	      	ON DELETE CASCADE 
+   	      	ON UPDATE CASCADE
+	);
+
+create table ban(
+	userId INTEGER, 
+	banned INTEGER,
+   	PRIMARY KEY (userId, banned),
+   	FOREIGN KEY (userId) 
+    	REFERENCES user (userId) 
+        	ON DELETE CASCADE 
+        	ON UPDATE CASCADE,
+   	FOREIGN KEY (banned) 
+   	   	REFERENCES user (userId) 
+   	      	ON DELETE CASCADE 
+   	      	ON UPDATE CASCADE
+	);
+
+
+create table comment(
+	commentId INTEGER PRIMARY KEY, 
+	photoId INTEGER NOT NULL, 
+	userId INTEGER NOT NULL,
+	content TEXT,
+	time TEXT,
+	FOREIGN KEY (userId) 
+    	REFERENCES user (userId) 
+        	ON DELETE CASCADE 
+        	ON UPDATE CASCADE,
+   	FOREIGN KEY (photoId) 
+   	   	REFERENCES photo (photoId) 
+   	      	ON DELETE CASCADE 
+   	      	ON UPDATE CASCADE
+	);
+
+create table photo(
+	photoId INTEGER PRIMARY KEY, 
+	userId INTEGER NOT NULL,
+	image BLOB,
+	time TEXT,
+	FOREIGN KEY (userId) 
+    	REFERENCES user (userId) 
+        	ON DELETE CASCADE 
+        	ON UPDATE CASCADE
+	);
+
+create table like(
+	userId INTEGER, 
+	photoId INTEGER,
+   	PRIMARY KEY (userId, photoId),
+   	FOREIGN KEY (userId) 
+    	REFERENCES user (userId) 
+        	ON DELETE CASCADE 
+        	ON UPDATE CASCADE,
+   	FOREIGN KEY (photoId) 
+   	   	REFERENCES photo (photoId) 
+   	      	ON DELETE CASCADE 
+   	      	ON UPDATE CASCADE
+	);
