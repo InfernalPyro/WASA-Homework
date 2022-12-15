@@ -473,7 +473,7 @@ paths:
 
   /user/{profileId}/photo/{photoId}/comments/:      
 
-    put:
+    post:
       tags: ["Photo"]
       operationId: commentPhoto
       summary: Comment a photo
