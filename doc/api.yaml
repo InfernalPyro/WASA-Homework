@@ -725,6 +725,8 @@ components:
           type: string
           format: date-time
           example: 2017-07-21T17:32:28Z
+          minLength : 10
+          maxLength : 21
 
 
     Stream:
@@ -742,7 +744,8 @@ components:
 
   
   securitySchemes:
-    Authentication:     
+    Authentication:   
+      description: Bearer authentication require a valid username  
       type: http
       scheme: bearer
       bearerFormat: JWT 
