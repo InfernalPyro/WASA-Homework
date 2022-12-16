@@ -37,7 +37,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  name:
+                  username:
                     type: string
                     example: Maria
                     minLength: 3
@@ -121,7 +121,7 @@ paths:
         - Authentication: []
 
 
-  /user/{userId}/changeUsername:
+  /user/{userId}/username:
     parameters: 
       - name: userId
         in: path
@@ -503,7 +503,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Comment'          
       responses:
-        '200':
+        '201':
           description: Comment added to photo
           content:
             application/json:
