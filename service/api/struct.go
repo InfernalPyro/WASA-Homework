@@ -5,7 +5,7 @@ import (
 )
 
 type Session struct {
-	username string `json:"username"`
+	Username string `json:"username"`
 }
 
 type Photo struct {

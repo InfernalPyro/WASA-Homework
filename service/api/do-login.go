@@ -17,14 +17,15 @@ func (rt *_router) doLogin(w http.ResponseWriter, r *http.Request, ps httprouter
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	//if len(sess.username) < 3 || len(sess.username) > 16 {
-	//	// Here we validated the username
-	//	w.WriteHeader(http.StatusBadRequest)
-	//	return
-	//}
+
+	if len([]rune(sess.Username)) < 3 || len([]rune(sess.Username)) > 16 {
+		// Here we validated the username
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	// Login the user in the DB.
-	id, err := rt.db.LoginUser(sess.username)
+	id, err := rt.db.LoginUser(sess.Username)
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
