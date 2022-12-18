@@ -46,8 +46,8 @@ type Photo struct {
 }
 
 type User struct {
-	ID       uint64
-	username string
+	UserId   uint64
+	Username string
 }
 
 // AppDatabase is the high level interface for the DB

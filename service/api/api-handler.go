@@ -10,7 +10,7 @@ func (rt *_router) Handler() http.Handler {
 	//Login
 	rt.router.POST("/session", rt.wrap(rt.doLogin))
 	//DeleteAccount
-	rt.router.PATCH("/user/:userId/username", rt.wrap(rt.setMyUsername))
+	rt.router.PATCH("/user/:userId/username", rt.wrap(rt.setMyUserName))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)

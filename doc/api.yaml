@@ -144,7 +144,7 @@ paths:
             schema:
                 type: object
                 properties:
-                  newUsername:
+                  username:
                     description: The new username
                     type: string
                     minLength : 3

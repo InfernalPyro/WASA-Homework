@@ -1,5 +1,7 @@
 package database
 
+import "log"
+
 // Login the user by their username
 func (db *appdbimpl) LoginUser(username string) (int64, error) {
 	//Id of the user that is logging in
@@ -24,6 +26,9 @@ func (db *appdbimpl) LoginUser(username string) (int64, error) {
 		//If not make another query to add the user.
 		_, err := tx.Exec(`INSERT INTO user (username) VALUES (?)`, username)
 		if err != nil {
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				log.Fatalf("update drivers: unable to rollback: %v", rollbackErr)
+			}
 			return id, err
 		}
 	}

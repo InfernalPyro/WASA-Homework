@@ -1,33 +1,58 @@
 package database
 
+import "log"
+
 // Login the user by their username
 func (db *appdbimpl) ChangeName(id uint64, newUsername string) (User, error) {
-	//Id of the user that is logging in
+	//The user that gets modified
 	var user User
 
-	res, err := db.c.Exec(`UPDATE users SET username=? WHERE id=?`,
-		newUsername, id)
-	if err != nil {
-		return user, err
-	}
-	row, err := db.c.Query("SELECT * FROM users WHERE ? == userId", id)
+	// Get a Tx for making transaction requests.
+	tx, err := db.c.Begin()
 	if err != nil {
 		return user, err
 	}
 
-	for row.Next() {
-		err = row.Scan(user)
+	//Query to modify username
+	res, err := tx.Exec(`UPDATE user SET username = ? WHERE userId= ?`, newUsername, id)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			log.Fatalf("update drivers: unable to rollback: %v", rollbackErr)
+		}
+		return user, err
+	}
+
+	//Check if the query worked
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return user, err
+	}
+	// If we didn't update any row, then the user didn't exist
+	if affected == 0 {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			log.Fatalf("update drivers: unable to rollback: %v", rollbackErr)
+		}
+		return user, UserDoesNotExist
+	}
+
+	//Query to get the modified user
+	row, err := tx.Query("SELECT * FROM user WHERE ? == userId", id)
+	if err != nil {
+		return user, err
+	}
+
+	if row.Next() {
+		err = row.Scan(&user.UserId, &user.Username)
 		if err != nil {
 			return user, err
 		}
 	}
+	defer func() { _ = row.Close() }()
 
-	affected, err := res.RowsAffected()
-	if err != nil {
+	// Commit the transaction.
+	if err = tx.Commit(); err != nil {
 		return user, err
-	} else if affected == 0 {
-		// If we didn't delete any row, then the fountain didn't exist
-		return user, UserDoesNotExist
 	}
+
 	return user, nil
 }
