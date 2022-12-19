@@ -36,13 +36,11 @@ import (
 	"fmt"
 )
 
-var UserDoesNotExist = errors.New("user does not exist")
-
 type Photo struct {
-	photoID uint64
-	userId  uint64
-	image   []string
-	time    string
+	PhotoId uint64
+	UserId  uint64
+	Image   string
+	Time    string
 }
 
 type User struct {
@@ -50,13 +48,35 @@ type User struct {
 	Username string
 }
 
+type Follow struct {
+	UserId  uint64
+	Follows uint64
+}
+
+type Ban struct {
+	UserId uint64
+	Banned uint64
+}
+
+type Comment struct {
+	CommentId uint64
+	UserId    uint64
+	PhotoId   uint64
+	Content   string
+	Time      string
+}
+
+type Like struct {
+	UserId  uint64
+	PhotoId uint64
+}
+
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
-	GetName() (string, error)
-	SetName(name string) error
-
 	LoginUser(username string) (int64, error)
 	ChangeName(id uint64, newUsername string) (User, error)
+	GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban, *[]Comment, *[]Photo, *[]Like, error)
+	GetPhotoInfo(photoId uint64) ([]Comment, []Like, error)
 
 	Ping() error
 }

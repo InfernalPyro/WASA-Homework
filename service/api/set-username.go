@@ -34,7 +34,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	// Call the function to change the name
-	user, err := rt.db.ChangeName(id, sess.Username)
+	dbUser, err := rt.db.ChangeName(id, sess.Username)
 	if err != nil {
 		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
 		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
@@ -43,7 +43,10 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
+	// var user User
+	// user.FromDatabase(dbUser)
+
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(user)
+	_ = json.NewEncoder(w).Encode(dbUser)
 }
