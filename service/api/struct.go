@@ -26,12 +26,14 @@ type Photo struct {
 }
 
 type User struct {
-	UserId    uint64   `json:"userId"`
-	Username  string   `json:"username"`
-	Follows   []uint64 `json:"follows"`
-	Followers []uint64 `json:"followers"`
-	Banned    []uint64 `json:"banned"`
-	Photos    []Photo  `json:"photos"`
+	UserId    uint64    `json:"userId"`
+	Username  string    `json:"username"`
+	Follows   []uint64  `json:"follows"`
+	Followers []uint64  `json:"followers"`
+	Banned    []uint64  `json:"banned"`
+	Photos    []Photo   `json:"photos"`
+	Likes     []uint64  `json:"likes"`
+	Comments  []Comment `json:"comments"`
 }
 
 // This function convert all the data of a single user taken from the db into a single user in api form
@@ -49,6 +51,18 @@ func (u *User) UserFromDatabase(user database.User, follow []database.Follow, fo
 	}
 	for _, p := range photos {
 		u.Photos = append(u.Photos, p)
+	}
+	for _, l := range likes {
+		u.Likes = append(u.Likes, l.PhotoId)
+	}
+	for _, c := range comments {
+		var comment Comment
+		comment.CommentId = c.CommentId
+		comment.PhotoID = c.PhotoId
+		comment.UserId = c.UserId
+		comment.Comment = c.Content
+		comment.Time = c.Time
+		u.Comments = append(u.Comments, comment)
 	}
 
 }

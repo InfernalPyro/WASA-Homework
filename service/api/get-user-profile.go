@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -22,10 +23,13 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	// Call the function to change the name
 	dbUser, dbFollow, dbFollowed, dbBans, dbComments, dbPhotos, dbLikes, err := rt.db.GetProfile(id)
 	if err != nil {
-		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("Can't get profile")
-		w.WriteHeader(http.StatusInternalServerError)
+		if err == sql.ErrNoRows {
+			ctx.Logger.WithError(err).Error("Invalid username supplied")
+			w.WriteHeader(http.StatusBadRequest)
+		} else {
+			ctx.Logger.WithError(err).Error("Can't get profile")
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 		return
 	}
 

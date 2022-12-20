@@ -1,9 +1,5 @@
 package database
 
-import (
-	"errors"
-)
-
 // Login the user by their username
 func (db *appdbimpl) GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban, *[]Comment, *[]Photo, *[]Like, error) {
 
@@ -34,7 +30,7 @@ func (db *appdbimpl) GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban,
 			return nil, nil, nil, nil, nil, nil, nil, err
 		}
 	} else {
-		return nil, nil, nil, nil, nil, nil, nil, errors.New("User does not exists")
+		return nil, nil, nil, nil, nil, nil, nil, err
 	}
 	defer func() { _ = row.Close() }()
 

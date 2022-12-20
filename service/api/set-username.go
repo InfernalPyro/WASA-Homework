@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/InfernalPyro/WASA-Homework/service/api/reqcontext"
+	"github.com/InfernalPyro/WASA-Homework/service/database"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -29,6 +30,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	if len([]rune(sess.Username)) < 3 || len([]rune(sess.Username)) > 16 {
 		// Here we validated the username
+		ctx.Logger.WithError(err).Error("New Username not valid")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -36,10 +38,16 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	// Call the function to change the name
 	dbUser, err := rt.db.ChangeName(id, sess.Username)
 	if err != nil {
-		// In this case, we have an error on our side. Log the error (so we can be notified) and send a 500 to the user
-		// Note: we are using the "logger" inside the "ctx" (context) because the scope of this issue is the request.
-		ctx.Logger.WithError(err).Error("Can't change username")
-		w.WriteHeader(http.StatusInternalServerError)
+		if err == database.ErrUsernameAlreadyInUse {
+			ctx.Logger.WithError(err).Error("New Username already in use")
+			w.WriteHeader(http.StatusNotAcceptable)
+		} else if err == database.ErrUserNotFound {
+			ctx.Logger.WithError(err).Error("User not found")
+			w.WriteHeader(http.StatusNotFound)
+		} else {
+			ctx.Logger.WithError(err).Error("Can't get profile")
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 		return
 	}
 

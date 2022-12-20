@@ -99,7 +99,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Stream'          
-        '400':
+        '401':
           description: User is not logged
         '404':
           description: User not found
@@ -139,10 +139,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '400':
-          description: User is not logged
         '401':
-          description: New Username not valid
+          description: User is not logged
+        '400':
+          description: New Username not valid 
+        '406':
+          description: New Username already in use
         '404':
           description: User not found
       security:
@@ -175,9 +177,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Photo'
-        '400':
-          description: User is not logged 
         '401':
+          description: User is not logged 
+        '400':
           description: Photo cannot be uploaded
         '404':
           description: User not found
@@ -206,12 +208,10 @@ paths:
       responses:
         '204':
           description: Photo deleted
-        '400':
-          description: User is not logged  
         '401':
-          description: Photo not found
+          description: User is not logged  
         '404':
-          description: User not found
+          description: User or Photo not found
       security:
         - Authentication: []
 
@@ -242,7 +242,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '400':
+        '401':
           description: User is not logged  
         '404':
           description: User not found
@@ -266,7 +266,7 @@ paths:
       responses:
         '204':
           description: User removed from follow list
-        '400':
+        '401':
           description: User is not logged  
         '404':
           description: User not found
@@ -299,7 +299,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '400':
+        '401':
           description: User is not logged  
         '404':
           description: User not found
@@ -323,7 +323,7 @@ paths:
       responses:
         '204':
           description: User removed from banned list
-        '400':
+        '401':
           description: User is not logged  
         '404':
           description: User not found
@@ -366,12 +366,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Photo'
-        '400':
-          description: User is not logged 
         '401':
-          description: Photo not found
+          description: User is not logged 
         '404':
-          description: User not found
+          description: User or Photo not found
       security:
         - Authentication: []
 
@@ -393,12 +391,10 @@ paths:
       responses:
         '204':
           description: Photo Unliked
-        '400':
-          description: User is not logged 
         '401':
-          description: Photo not found
+          description: User is not logged 
         '404':
-          description: User not found
+          description: User or Photo not found
       security:
         - Authentication: []
 
@@ -440,12 +436,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comment'
-        '400':
-          description: User is not logged
         '401':
-          description: Photo not found
+          description: User is not logged
         '404':
-          description: User not found
+          description: User or Photo not found
       security:
         - Authentication: []
 
@@ -485,15 +479,10 @@ paths:
       responses:
         '204':
           description: Comment deleted
-
-        '400':
-          description: User is not logged
         '401':
-          description: Photo not found
-        '402':
-          description: Comment not found
+          description: User is not logged
         '404':
-          description: User not found
+          description: User, Comment or Photo not found
       security:
         - Authentication: []
       

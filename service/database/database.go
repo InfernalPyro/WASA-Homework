@@ -71,6 +71,9 @@ type Like struct {
 	PhotoId uint64
 }
 
+var ErrUserNotFound = errors.New("User not found")
+var ErrUsernameAlreadyInUse = errors.New("Username alrady in use")
+
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 	LoginUser(username string) (int64, error)

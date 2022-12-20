@@ -1,9 +1,5 @@
 package database
 
-import (
-	"errors"
-)
-
 // Login the user by their username
 func (db *appdbimpl) ChangeName(id uint64, newUsername string) (User, error) {
 	// The user that gets modified
@@ -21,6 +17,9 @@ func (db *appdbimpl) ChangeName(id uint64, newUsername string) (User, error) {
 	// Query to modify username
 	res, err := tx.Exec(`UPDATE user SET username = ? WHERE userId= ?`, newUsername, id)
 	if err != nil {
+		if err.Error() == "UNIQUE constraint failed: user.username" {
+			return user, ErrUsernameAlreadyInUse
+		}
 		return user, err
 	}
 
@@ -31,7 +30,7 @@ func (db *appdbimpl) ChangeName(id uint64, newUsername string) (User, error) {
 	}
 	// If we didn't update any row, then the user didn't exist
 	if affected == 0 {
-		return user, errors.New("User does not exist")
+		return user, ErrUserNotFound
 	}
 
 	// Query to get the modified user
