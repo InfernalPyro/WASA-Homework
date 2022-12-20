@@ -20,6 +20,7 @@ tags:
   - name: "Photo"
     description: Endpoint for other users photo
 
+  
 paths:
   /session:
     post:
@@ -56,17 +57,9 @@ paths:
                     type: integer
                     example: 10  
 
-
   /user/{userId}/profile: 
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+    parameters:
+      - $ref: "#/components/parameters/UserId"
     get:
       tags: ["User"]
       summary: Get user profile 
@@ -89,15 +82,8 @@ paths:
 
 
   /user/{userId}/home:
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+    parameters:
+      - $ref: "#/components/parameters/UserId"
     get:
       tags: ["User"]
       summary: Get stream
@@ -122,15 +108,8 @@ paths:
 
 
   /user/{userId}/username:
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+    parameters:
+      - $ref: "#/components/parameters/UserId"
     patch:       
       tags: ["Profile"]
       operationId: setMyUserName
@@ -143,6 +122,7 @@ paths:
           application/json:
             schema:
                 type: object
+                description: schema that contains the new username #test
                 properties:
                   username:
                     description: The new username
@@ -170,15 +150,8 @@ paths:
 
 
   /user/{userId}/photo/:
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+    parameters:
+      - $ref: "#/components/parameters/UserId"
     post:       
       tags: ["Profile"]
       operationId: uploadPhoto
@@ -190,6 +163,7 @@ paths:
         content:
           image/*:    
             schema:
+              description: This schema rapresents the image binary code #test
               type: string
               format: binary
               minLength : 1
@@ -211,15 +185,8 @@ paths:
         - Authentication: []
 
   /user/{userId}/photo/{photoId}:
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+    parameters:
+      - $ref: "#/components/parameters/UserId"
     delete:       
       tags: ["Profile"]
       operationId: deletePhoto
@@ -235,13 +202,10 @@ paths:
             type: integer
             format: int64
             example: 5
+            
       responses:
-        '200':
+        '204':
           description: Photo deleted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged  
         '401':
@@ -254,15 +218,8 @@ paths:
     
 
   /user/{userId}/follow/{followId}:  
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+    parameters:
+      - $ref: "#/components/parameters/UserId"
 
     put:
       tags: ["User operations"]
@@ -307,12 +264,8 @@ paths:
             format: int64
           description: The user to unfollow Id
       responses:
-        '200':
+        '204':
           description: User removed from follow list
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged  
         '404':
@@ -322,15 +275,8 @@ paths:
     
 
   /user/{userId}/ban/{banId}:      
-    parameters: 
-      - name: userId
-        in: path
-        description: The id of the logged user
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+    parameters:
+      - $ref: "#/components/parameters/UserId"
 
     put:
       tags: ["User operations"]
@@ -375,12 +321,8 @@ paths:
               format: int64
             description: The user to unban Id
       responses:
-        '200':
+        '204':
           description: User removed from banned list
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
         '400':
           description: User is not logged  
         '404':
@@ -399,15 +341,8 @@ paths:
           type: integer
           format: int64
         description: Id of the owner of the photo
-      - name: userId
-        in: path
-        description: |-
-         The id of the logged user that will be added or removed from the photo likes list
-        required: true
-        schema:
-          type: integer
-          format: int64
-          example: 10
+      
+      - $ref: "#/components/parameters/UserId"
 
     put:
       tags: ["Photo"]
@@ -447,21 +382,17 @@ paths:
       description: |-
            An user can unlike any photo they liked before
       parameters: 
-          - in: path
-            name: photoId 
-            required: true
-            schema:
-              type: integer
-              format: int64
-            description: The photo to unlike Id's
+        - in: path
+          name: photoId 
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: The photo to unlike Id's
           
       responses:
-        '200':
+        '204':
           description: Photo Unliked
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Photo'
         '400':
           description: User is not logged 
         '401':
@@ -503,7 +434,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Comment'          
       responses:
-        '201':
+        '200':
           description: Comment added to photo
           content:
             application/json:
@@ -513,8 +444,6 @@ paths:
           description: User is not logged
         '401':
           description: Photo not found
-        '402':
-          description: Comment not found
         '404':
           description: User not found
       security:
@@ -554,12 +483,9 @@ paths:
             description: The comment to delete Id's
           
       responses:
-        '200':
+        '204':
           description: Comment deleted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Comment'
+
         '400':
           description: User is not logged
         '401':
@@ -574,8 +500,19 @@ paths:
 
 
 components:
+  parameters: 
+    UserId:
+      schema:
+        type: integer
+        format: int64
+        example: 10
+      name: userId
+      in: path
+      description: The id of the logged user
+      required: true
+      
+
   schemas:
-    
     User:
       description: A single user of the platform
       type: object
@@ -635,7 +572,26 @@ components:
           items: 
             $ref: '#/components/schemas/Photo'
 
+        likes: 
+          description: List of ids of every photo this user liked
+          type: array
+          minItems : 0
+          maxItems : 100000
+          items: 
+            type: integer
+          example: 
+            -  11
+            -  12
+
+        comments:
+          description: List of every comment this user made
+          type: array
+          minItems : 0
+          maxItems : 1000
+          items:
+            $ref: '#/components/schemas/Comment'
     
+
     Photo:
       description: A photo uploaded by an user
       type: object
@@ -670,7 +626,7 @@ components:
           maxLength : 21
 
         likes:
-          description: List of all the user's ids that liked this photo
+          description: List of all the users ids that liked this photo
           type: array
           minItems : 0
           maxItems : 1000
