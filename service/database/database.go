@@ -78,6 +78,7 @@ var ErrUsernameAlreadyInUse = errors.New("Username alrady in use")
 type AppDatabase interface {
 	LoginUser(username string) (int64, error)
 	ChangeName(id uint64, newUsername string) (User, error)
+	GetStream(id uint64) ([]Photo, error)
 	GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban, *[]Comment, *[]Photo, *[]Like, error)
 	GetPhotoInfo(photoId uint64) ([]Comment, []Like, error)
 

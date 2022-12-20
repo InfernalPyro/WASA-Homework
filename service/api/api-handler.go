@@ -11,6 +11,8 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.POST("/session", rt.wrap(rt.doLogin))
 	// Change Username
 	rt.router.PATCH("/user/:userId/username", rt.wrap(rt.setMyUserName))
+	// Get user stream
+	rt.router.GET("/user/:userId/home", rt.wrap(rt.getMyStream))
 	// Get user profile
 	rt.router.GET("/user/:userId/profile", rt.wrap(rt.getUserProfile))
 

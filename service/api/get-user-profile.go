@@ -1,12 +1,12 @@
 package api
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/InfernalPyro/WASA-Homework/service/api/reqcontext"
+	"github.com/InfernalPyro/WASA-Homework/service/database"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -20,10 +20,10 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	// Call the function to change the name
+	// Call the function to get profile
 	dbUser, dbFollow, dbFollowed, dbBans, dbComments, dbPhotos, dbLikes, err := rt.db.GetProfile(id)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == database.ErrUserNotFound {
 			ctx.Logger.WithError(err).Error("Invalid username supplied")
 			w.WriteHeader(http.StatusBadRequest)
 		} else {
