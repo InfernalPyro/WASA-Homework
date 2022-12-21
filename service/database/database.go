@@ -73,6 +73,7 @@ type Like struct {
 
 var ErrUserNotFound = errors.New("User not found")
 var ErrUsernameAlreadyInUse = errors.New("Username alrady in use")
+var ErrUserIsBanned = errors.New("User is banned from the other")
 
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
@@ -81,6 +82,7 @@ type AppDatabase interface {
 	GetStream(id uint64) ([]Photo, error)
 	GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban, *[]Comment, *[]Photo, *[]Like, error)
 	GetPhotoInfo(photoId uint64) ([]Comment, []Like, error)
+	FollowUser(id uint64, followId uint64) error
 
 	Ping() error
 }
