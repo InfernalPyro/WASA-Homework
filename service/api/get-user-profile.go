@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -23,7 +24,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	// Call the function to get profile
 	dbUser, dbFollow, dbFollowed, dbBans, dbComments, dbPhotos, dbLikes, err := rt.db.GetProfile(id)
 	if err != nil {
-		if err == database.ErrUserNotFound {
+		if errors.Is(err, database.ErrUserNotFound) {
 			ctx.Logger.WithError(err).Error("Invalid username supplied")
 			w.WriteHeader(http.StatusBadRequest)
 		} else {

@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -23,7 +24,7 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 	// Call the function to change the name
 	dbPhotos, err := rt.db.GetStream(id)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			ctx.Logger.WithError(err).Error("User not found")
 			w.WriteHeader(http.StatusNotFound)
 		} else {

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -38,10 +39,10 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	// Call the function to change the name
 	dbUser, err := rt.db.ChangeName(id, sess.Username)
 	if err != nil {
-		if err == database.ErrUsernameAlreadyInUse {
+		if errors.Is(err, database.ErrUsernameAlreadyInUse) {
 			ctx.Logger.WithError(err).Error("New Username already in use")
 			w.WriteHeader(http.StatusNotAcceptable)
-		} else if err == database.ErrUserNotFound {
+		} else if errors.Is(err, database.ErrUserNotFound) {
 			ctx.Logger.WithError(err).Error("User not found")
 			w.WriteHeader(http.StatusNotFound)
 		} else {

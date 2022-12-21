@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -25,11 +26,11 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 	// Call the function make user "id" follow the user "followId"
 	err = rt.db.FollowUser(id, followId)
 	if err != nil {
-		if err == database.ErrUserNotFound {
+		if errors.Is(err, database.ErrUserNotFound) {
 			ctx.Logger.WithError(err).Error("User does not exists")
 			w.WriteHeader(http.StatusNotFound)
 			return
-		} else if err == database.ErrUserIsBanned {
+		} else if errors.Is(err, database.ErrUserIsBanned) {
 			ctx.Logger.WithError(err).Error("User is banned from the one they want to follow")
 			w.WriteHeader(http.StatusBadRequest)
 			return
