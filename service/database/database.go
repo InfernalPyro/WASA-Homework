@@ -83,6 +83,7 @@ type AppDatabase interface {
 	GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban, *[]Comment, *[]Photo, *[]Like, error)
 	GetPhotoInfo(photoId uint64) ([]Comment, []Like, error)
 	FollowUser(id uint64, followId uint64) error
+	UnfollowUser(id uint64, followId uint64) error
 
 	Ping() error
 }
