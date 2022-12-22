@@ -22,8 +22,8 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 
 	// Read the new username from the request body.
 	var sess Session
-	errr := json.NewDecoder(r.Body).Decode(&sess)
-	if errr != nil {
+	err = json.NewDecoder(r.Body).Decode(&sess)
+	if err != nil {
 		// The body was not a parseable JSON, reject it
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -37,7 +37,7 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 	}
 
 	// Call the function to change the name
-	dbUser, err := rt.db.ChangeName(id, sess.Username)
+	err = rt.db.ChangeName(id, sess.Username)
 	if err != nil {
 		if errors.Is(err, database.ErrUsernameAlreadyInUse) {
 			ctx.Logger.WithError(err).Error("New Username already in use")
@@ -52,10 +52,6 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
-	// var user User
-	// user.FromDatabase(dbUser)
-
 	// Send the output to the user.
-	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(dbUser)
+	w.WriteHeader(http.StatusNoContent)
 }

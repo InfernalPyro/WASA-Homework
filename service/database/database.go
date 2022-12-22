@@ -78,7 +78,7 @@ var ErrUserIsBanned = errors.New("User is banned from the other")
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 	LoginUser(username string) (int64, error)
-	ChangeName(id uint64, newUsername string) (User, error)
+	ChangeName(id uint64, newUsername string) error
 	GetStream(id uint64) ([]Photo, error)
 	GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban, *[]Comment, *[]Photo, *[]Like, error)
 	GetPhotoInfo(photoId uint64) ([]Comment, []Like, error)
