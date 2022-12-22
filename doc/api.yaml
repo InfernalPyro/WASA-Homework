@@ -36,6 +36,7 @@ paths:
         content:
           application/json:
               schema:
+                description: username of the logging user #test 22/12
                 type: object
                 properties:
                   username:
@@ -52,6 +53,7 @@ paths:
           content:
             application/json:
               schema:
+                description: id of the logging user #test 22/12
                 type: object
                 properties:
                   identifier:
@@ -135,12 +137,12 @@ paths:
                     pattern: "^[a-zA-Z0-9 ]*$"
         required: true
       responses:
-        '200':
+        '204':
           description: Username updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+          #content:
+          #  application/json:
+          #    schema:
+          #      $ref: '#/components/schemas/User'
         '401':
           description: User is not logged
         '400':
@@ -238,12 +240,12 @@ paths:
             format: int64
           description: The user to follow ID's
       responses:
-        '200':
+        '204':
           description: User added to follow list
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+          #content:
+          #  application/json:
+          #    schema:
+          #      $ref: '#/components/schemas/User'
         '400':
           description: Trying to follow someone that banned you
         '401':
@@ -297,12 +299,12 @@ paths:
             format: int64
           description: The user to ban Id
       responses:
-        '200':
+        '204':
           description: User added to banned list
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+          #content:
+          #  application/json:
+          #    schema:
+          #      $ref: '#/components/schemas/User'
         '401':
           description: User is not logged  
         '404':
@@ -364,12 +366,12 @@ paths:
           description: The photo to like Id's
         
       responses:
-        '200':
+        '204':
           description: Photo liked
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Photo'
+          #content:
+          #  application/json:
+          #    schema:
+          #      $ref: '#/components/schemas/Photo'
         '401':
           description: User is not logged 
         '404':
