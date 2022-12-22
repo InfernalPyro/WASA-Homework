@@ -9,9 +9,6 @@ func (db *appdbimpl) FollowUser(id uint64, followId uint64) error {
 		return err
 	}
 
-	// Defer a rollback in case anything fails.
-	defer tx.Rollback()
-
 	// First a query to check if the user is banned from the one that they want to follow
 	row, err := tx.Query("SELECT * FROM ban WHERE banned == ? and userId == ?", id, followId)
 	if err != nil {
@@ -28,7 +25,10 @@ func (db *appdbimpl) FollowUser(id uint64, followId uint64) error {
 	_, err = tx.Exec("INSERT into follow (userId,follows) values (?,?)", id, followId)
 	if err != nil {
 		if err.Error() == "FOREIGN KEY constraint failed" {
-			return ErrUserNotFound
+			err = ErrUserNotFound
+		}
+		if tx.Rollback() != nil {
+			return err
 		}
 		return err
 	}

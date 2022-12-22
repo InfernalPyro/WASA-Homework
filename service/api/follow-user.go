@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 	"strconv"
@@ -15,6 +14,11 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 
 	// The User ID in the path is a 64-bit unsigned integer. Let's parse it.
 	id, err := strconv.ParseUint(ps.ByName("userId"), 10, 64)
+	if err != nil {
+		// The value was not uint64, reject the action indicating an error on the client side.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	// The User to follow ID in the path is a 64-bit unsigned integer. Let's parse it.
 	followId, err := strconv.ParseUint(ps.ByName("followId"), 10, 64)
 	if err != nil {
@@ -40,9 +44,6 @@ func (rt *_router) followUser(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	var user User
-
 	// Send the output to the user.
-	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(user)
+	w.WriteHeader(http.StatusNoContent)
 }

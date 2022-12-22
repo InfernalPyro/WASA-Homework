@@ -32,6 +32,9 @@ func (db *appdbimpl) GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban,
 	} else {
 		return nil, nil, nil, nil, nil, nil, nil, ErrUserNotFound
 	}
+	if err = row.Err(); err != nil {
+		return nil, nil, nil, nil, nil, nil, nil, err
+	}
 	defer func() { _ = row.Close() }()
 
 	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-

@@ -11,14 +11,14 @@ func (db *appdbimpl) ChangeName(id uint64, newUsername string) error {
 		return err
 	}
 
-	// Defer a rollback in case anything fails.
-	defer tx.Rollback()
-
 	// Query to modify username
 	res, err := tx.Exec(`UPDATE user SET username = ? WHERE userId= ?`, newUsername, id)
 	if err != nil {
 		if err.Error() == "UNIQUE constraint failed: user.username" {
-			return ErrUsernameAlreadyInUse
+			err = ErrUsernameAlreadyInUse
+		}
+		if tx.Rollback() != nil {
+			return err
 		}
 		return err
 	}

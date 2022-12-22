@@ -64,7 +64,7 @@ func (u *User) UserFromDatabase(user database.User, follow []database.Follow, fo
 		comment.Time = c.Time
 		u.Comments = append(u.Comments, comment)
 	}
-
+	return
 }
 
 // This function convert all the data of a single photo taken from the db into a single photo in api form

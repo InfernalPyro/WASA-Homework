@@ -11,9 +11,6 @@ func (db *appdbimpl) GetStream(id uint64) ([]Photo, error) {
 		return photos, err
 	}
 
-	// Defer a rollback in case anything fails.
-	defer tx.Rollback()
-
 	// Query to get photos of every user that you follow and didn't ban you ordered by the most recent
 	row, err := tx.Query("SELECT * FROM photo where userId = (Select follows from follow where userId = ? and follows not in (SELECT userId from ban where banned = ? )) order by time desc", id, id)
 	if err != nil {
@@ -26,6 +23,9 @@ func (db *appdbimpl) GetStream(id uint64) ([]Photo, error) {
 			return photos, err
 		}
 		photos = append(photos, p)
+	}
+	if err = row.Err(); err != nil {
+		return photos, err
 	}
 
 	defer func() { _ = row.Close() }()
