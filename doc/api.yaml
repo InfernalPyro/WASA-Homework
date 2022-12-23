@@ -338,7 +338,7 @@ paths:
 
     
 
-  /user/{profileId}/photo/{photoId}/likes/{userId}:
+  /profile/{profileId}/photo/{photoId}/likes/{userId}:
     parameters:
       - in: path
         name: profileId
@@ -368,10 +368,6 @@ paths:
       responses:
         '204':
           description: Photo liked
-          #content:
-          #  application/json:
-          #    schema:
-          #      $ref: '#/components/schemas/Photo'
         '401':
           description: User is not logged 
         '404':
@@ -404,7 +400,7 @@ paths:
       security:
         - Authentication: []
 
-  /user/{profileId}/photo/{photoId}/comments/:      
+  /profile/{profileId}/photo/{photoId}/comments/:      
 
     post:
       tags: ["Photo"]

@@ -72,6 +72,7 @@ type Like struct {
 }
 
 var ErrUserNotFound = errors.New("User not found")
+var ErrPhotoNotFound = errors.New("Photo not found")
 var ErrUsernameAlreadyInUse = errors.New("Username alrady in use")
 var ErrUserIsBanned = errors.New("User is banned from the other")
 
@@ -86,6 +87,8 @@ type AppDatabase interface {
 	UnfollowUser(id uint64, followId uint64) error
 	BanUser(id uint64, banId uint64) error
 	UnbanUser(id uint64, banId uint64) error
+	LikePhoto(id uint64, photoId uint64) error
+	UnlikePhoto(id uint64, photoId uint64) error
 
 	Ping() error
 }

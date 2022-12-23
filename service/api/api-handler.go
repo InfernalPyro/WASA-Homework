@@ -24,6 +24,10 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.PUT("/user/:userId/ban/:banId", rt.wrap(rt.banUser))
 	// Unban user
 	rt.router.DELETE("/user/:userId/ban/:banId", rt.wrap(rt.unbanUser))
+	// Like photo
+	rt.router.PUT("/profile/:profileId/photo/:photoId/likes/:userId", rt.wrap(rt.likePhoto))
+	// Unlike photo
+	rt.router.DELETE("/profile/:profileId/photo/:photoId/likes/:userId", rt.wrap(rt.unlikePhoto))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)
