@@ -430,7 +430,21 @@ paths:
         content:
           application/json:
               schema:
-                $ref: '#/components/schemas/Comment'          
+                description: Comment to publish
+                type: object
+                properties:
+                  comment:
+                    description: Text of the comment
+                    type: string
+                    example: This is a comment
+                    minLength: 1
+                    maxLength: 100
+                    pattern: "^[a-zA-Z0-9 ]*$"   
+                  userId:  
+                    description: The user's id 
+                    type: integer
+                    format: int64
+                    example: 10
       responses:
         '201':
           description: Comment added to photo
@@ -445,7 +459,7 @@ paths:
       security:
         - Authentication: []
 
-  /user/{profileId}/photo/{photoId}/comments/{commentId}: 
+  /profile/{profileId}/photo/{photoId}/comments/{commentId}: 
 
     delete:
       tags: ["Photo"]
@@ -612,7 +626,7 @@ components:
           description: Time at which the photo ha been published
           type: string
           format: date-time
-          example: 2017-07-21T17:32:28Z
+          example: 2022-12-23 19:24:49
           minLength : 10
           maxLength : 21
 
@@ -671,7 +685,7 @@ components:
           description: Time at which the comment has been published
           type: string
           format: date-time
-          example: 2017-07-21T17:32:28Z
+          example: 2022-12-23 19:24:49
           minLength : 10
           maxLength : 21
 

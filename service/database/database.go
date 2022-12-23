@@ -89,6 +89,7 @@ type AppDatabase interface {
 	UnbanUser(id uint64, banId uint64) error
 	LikePhoto(id uint64, photoId uint64) error
 	UnlikePhoto(id uint64, photoId uint64) error
+	CommentPhoto(photoId uint64, comment Comment) (Comment, error)
 
 	Ping() error
 }
