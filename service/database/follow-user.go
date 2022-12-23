@@ -18,6 +18,9 @@ func (db *appdbimpl) FollowUser(id uint64, followId uint64) error {
 	// Check if the query have found the user
 	if row.Next() {
 		defer func() { _ = row.Close() }()
+		if tx.Rollback() != nil {
+			return err
+		}
 		return ErrUserIsBanned
 	}
 

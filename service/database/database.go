@@ -84,6 +84,8 @@ type AppDatabase interface {
 	GetPhotoInfo(photoId uint64) ([]Comment, []Like, error)
 	FollowUser(id uint64, followId uint64) error
 	UnfollowUser(id uint64, followId uint64) error
+	BanUser(id uint64, banId uint64) error
+	UnbanUser(id uint64, banId uint64) error
 
 	Ping() error
 }

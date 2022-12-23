@@ -15,10 +15,15 @@ func (rt *_router) Handler() http.Handler {
 	rt.router.GET("/user/:userId/home", rt.wrap(rt.getMyStream))
 	// Get user profile
 	rt.router.GET("/user/:userId/profile", rt.wrap(rt.getUserProfile))
+
 	// Follow user
 	rt.router.PUT("/user/:userId/follow/:followId", rt.wrap(rt.followUser))
 	// Unfollow user
 	rt.router.DELETE("/user/:userId/follow/:followId", rt.wrap(rt.unfollowUser))
+	// Ban user
+	rt.router.PUT("/user/:userId/ban/:banId", rt.wrap(rt.banUser))
+	// Unban user
+	rt.router.DELETE("/user/:userId/ban/:banId", rt.wrap(rt.unbanUser))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)
