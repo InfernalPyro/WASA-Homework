@@ -90,6 +90,7 @@ type AppDatabase interface {
 	LikePhoto(id uint64, photoId uint64) error
 	UnlikePhoto(id uint64, photoId uint64) error
 	CommentPhoto(photoId uint64, comment Comment) (Comment, error)
+	UncommentPhoto(commentId uint64, photoId uint64) error
 
 	Ping() error
 }
