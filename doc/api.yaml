@@ -139,10 +139,6 @@ paths:
       responses:
         '204':
           description: Username updated
-          #content:
-          #  application/json:
-          #    schema:
-          #      $ref: '#/components/schemas/User'
         '401':
           description: User is not logged
         '400':
@@ -167,7 +163,7 @@ paths:
       requestBody:
         description: Photo to upload
         content:
-          image/*:    
+          image.png:    
             schema:
               description: This schema rapresents the image binary code #test
               type: string

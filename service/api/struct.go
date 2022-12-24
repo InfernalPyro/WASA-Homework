@@ -8,6 +8,10 @@ type Session struct {
 	Username string `json:"username"`
 }
 
+type Image struct {
+	Image string `json:"image"`
+}
+
 type ApiComment struct {
 	Comment string `json:"comment"`
 	UserId  uint64 `json:"userId"`

@@ -33,20 +33,6 @@ func (db *appdbimpl) ChangeName(id uint64, newUsername string) error {
 		return ErrUserNotFound
 	}
 
-	// // Query to get the modified user
-	// row, err := tx.Query("SELECT * FROM user WHERE ? == userId", id)
-	// if err != nil {
-	// 	return user, err
-	// }
-	//
-	// if row.Next() {
-	// 	err = row.Scan(&user.UserId, &user.Username)
-	// 	if err != nil {
-	// 		return user, err
-	// 	}
-	// }
-	// defer func() { _ = row.Close() }()
-
 	// Commit the transaction.
 	if err = tx.Commit(); err != nil {
 		return err

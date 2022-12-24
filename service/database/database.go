@@ -91,6 +91,8 @@ type AppDatabase interface {
 	UnlikePhoto(id uint64, photoId uint64) error
 	CommentPhoto(photoId uint64, comment Comment) (Comment, error)
 	UncommentPhoto(commentId uint64, photoId uint64) error
+	UploadPhoto(id uint64, bImage string) (Photo, error)
+	DeletePhoto(id uint64, photoId uint64) error
 
 	Ping() error
 }
