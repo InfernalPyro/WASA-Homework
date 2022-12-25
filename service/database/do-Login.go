@@ -17,10 +17,10 @@ func (db *appdbimpl) LoginUser(username string) (int64, error) {
 	if err != nil {
 		return id, err
 	}
+	defer func() { _ = row.Close() }()
 
 	// Check if the query have found the user
 	if !row.Next() {
-		defer func() { _ = row.Close() }()
 		// If not make another query to add the user.
 		_, err := tx.Exec(`INSERT INTO user (username) VALUES (?)`, username)
 		if err != nil {
