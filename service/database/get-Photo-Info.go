@@ -57,5 +57,5 @@ func (db *appdbimpl) GetPhotoInfo(photoId uint64) ([]Comment, []Like, error) {
 		return comments, likes, err
 	}
 
-	return comments, likes, err
+	return comments, likes, nil
 }

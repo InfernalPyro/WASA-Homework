@@ -23,6 +23,9 @@ func (db *appdbimpl) FollowUser(id uint64, followId uint64) error {
 		}
 		return ErrUserIsBanned
 	}
+	if err = row.Err(); err != nil {
+		return err
+	}
 
 	// Query to insert the new follow
 	_, err = tx.Exec("INSERT into follow (userId,follows) values (?,?)", id, followId)
