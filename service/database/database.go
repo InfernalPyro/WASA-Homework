@@ -76,6 +76,8 @@ var ErrPhotoNotFound = errors.New("Photo not found")
 var ErrUsernameAlreadyInUse = errors.New("Username alrady in use")
 var ErrUserIsBanned = errors.New("User is banned from the other")
 
+const ErrForeignKey = "FOREIGN KEY constraint failed"
+
 // AppDatabase is the high level interface for the DB
 type AppDatabase interface {
 	LoginUser(username string) (int64, error)
@@ -91,7 +93,8 @@ type AppDatabase interface {
 	UnlikePhoto(id uint64, photoId uint64) error
 	CommentPhoto(photoId uint64, comment Comment) (Comment, error)
 	UncommentPhoto(commentId uint64, photoId uint64) error
-	UploadPhoto(id uint64, bImage string) (Photo, error)
+	GetComment(commentId uint64, photoId uint64) (Comment, error)
+	UploadPhoto(id uint64, bImage Photo) (Photo, error)
 	DeletePhoto(id uint64, photoId uint64) error
 
 	Ping() error

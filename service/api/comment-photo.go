@@ -23,10 +23,18 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 
 	// Read the comment from the request body.
-	var apiComment ApiComment
+	var apiComment Comment
 	err = json.NewDecoder(r.Body).Decode(&apiComment)
 	if err != nil {
 		// The body was not a parseable JSON, reject it
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// Check if user have permission to make the request
+	b, err := Authorized(r.Header.Get("Authorization"), apiComment.UserId)
+	if b == false {
+		ctx.Logger.WithError(err).Error("Token error")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

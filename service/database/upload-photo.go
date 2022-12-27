@@ -3,9 +3,7 @@ package database
 import "time"
 
 // Login the user by their username
-func (db *appdbimpl) UploadPhoto(id uint64, bImage string) (Photo, error) {
-
-	var photo Photo
+func (db *appdbimpl) UploadPhoto(id uint64, photo Photo) (Photo, error) {
 
 	// Get a Tx for making transaction requests.
 	tx, err := db.c.Begin()
@@ -19,13 +17,12 @@ func (db *appdbimpl) UploadPhoto(id uint64, bImage string) (Photo, error) {
 
 	// We will return this photo in database form
 	photo.UserId = id
-	photo.Image = bImage
 	photo.Time = t.Format(layout)
 
 	// Query to modify username
 	_, err = tx.Exec(`Insert into photo (userId, image, time) values (?, ?, ?)`, photo.UserId, photo.Image, photo.Time)
 	if err != nil {
-		if err.Error() == "FOREIGN KEY constraint failed" {
+		if err.Error() == ErrForeignKey {
 			err = ErrUserNotFound
 		}
 		if tx.Rollback() != nil {

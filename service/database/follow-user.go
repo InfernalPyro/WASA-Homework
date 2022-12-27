@@ -30,7 +30,7 @@ func (db *appdbimpl) FollowUser(id uint64, followId uint64) error {
 	// Query to insert the new follow
 	_, err = tx.Exec("INSERT into follow (userId,follows) values (?,?)", id, followId)
 	if err != nil {
-		if err.Error() == "FOREIGN KEY constraint failed" {
+		if err.Error() == ErrForeignKey {
 			err = ErrUserNotFound
 		}
 		if tx.Rollback() != nil {

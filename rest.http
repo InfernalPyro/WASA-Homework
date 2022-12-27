@@ -1,5 +1,6 @@
-POST http://localhost:3000/user/1/follow/1 HTTP/1.1
+PUT http://localhost:3000/user/1/ban/1  HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer 2
 
 
 

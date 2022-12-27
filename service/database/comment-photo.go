@@ -12,7 +12,7 @@ func (db *appdbimpl) CommentPhoto(photoId uint64, comment Comment) (Comment, err
 	// Query to insert the new like
 	_, err = tx.Exec("Insert into comment (photoId, userId, content, time) values (?,?,?,?)", photoId, comment.UserId, comment.Content, comment.Time)
 	if err != nil {
-		if err.Error() == "FOREIGN KEY constraint failed" {
+		if err.Error() == ErrForeignKey {
 			err = ErrPhotoNotFound
 		}
 		if tx.Rollback() != nil {

@@ -12,7 +12,7 @@ func (db *appdbimpl) BanUser(id uint64, banId uint64) error {
 	// Query to insert the new ban
 	_, err = tx.Exec("INSERT into ban (userId,banned) values (?,?)", id, banId)
 	if err != nil {
-		if err.Error() == "FOREIGN KEY constraint failed" {
+		if err.Error() == ErrForeignKey {
 			err = ErrUserNotFound
 		}
 		if tx.Rollback() != nil {

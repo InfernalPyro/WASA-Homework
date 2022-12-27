@@ -163,13 +163,9 @@ paths:
       requestBody:
         description: Photo to upload
         content:
-          image.png:    
-            schema:
-              description: This schema rapresents the image binary code #test
-              type: string
-              format: binary
-              minLength : 1
-              maxLength : 400000000
+          application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
       responses:
         '201':
           description: Photo uploaded
@@ -426,21 +422,7 @@ paths:
         content:
           application/json:
               schema:
-                description: Comment to publish
-                type: object
-                properties:
-                  comment:
-                    description: Text of the comment
-                    type: string
-                    example: This is a comment
-                    minLength: 1
-                    maxLength: 100
-                    pattern: "^[a-zA-Z0-9 ]*$"   
-                  userId:  
-                    description: The user's id 
-                    type: integer
-                    format: int64
-                    example: 10
+                $ref: '#/components/schemas/Comment'
       responses:
         '201':
           description: Comment added to photo
@@ -603,12 +585,14 @@ components:
           type: integer
           format: int64
           example: 72
+          readOnly: true
         
         profileId:
           description: Id of the user that published the photo
           type: integer
           format: int64
           example: 10
+          readOnly: true
 
         image:
           description: The actual photo
@@ -616,7 +600,7 @@ components:
           format: binary
           minLength : 3
           maxLength : 400000000
-          example: this contains the photo
+          example: this contains the photo in binary 
 
         time:
           description: Time at which the photo ha been published
@@ -625,6 +609,7 @@ components:
           example: 2022-12-23 19:24:49
           minLength : 10
           maxLength : 21
+          readOnly: true
 
         likes:
           description: List of all the users ids that liked this photo
@@ -636,6 +621,7 @@ components:
           example: 
             -  11
             -  12
+          readOnly: true
 
         comments:
           description: List of every comment published on this photo
@@ -644,6 +630,7 @@ components:
           maxItems : 1000
           items:
             $ref: '#/components/schemas/Comment'
+          readOnly: true
     
 
     Comment:
@@ -656,12 +643,14 @@ components:
           type: integer
           format: int64
           example: 3
+          readOnly: true
 
         photoId:
           description: Id of the photo on which this comment has been published
           type: integer
           format: int64
           example: 72
+          readOnly: true
 
         userId:
           description: Id of the user that published this comment
@@ -684,6 +673,7 @@ components:
           example: 2022-12-23 19:24:49
           minLength : 10
           maxLength : 21
+          readOnly: true
 
 
     Stream:

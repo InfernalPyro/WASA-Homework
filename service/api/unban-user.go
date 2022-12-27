@@ -27,6 +27,14 @@ func (rt *_router) unbanUser(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
+	// Check if user have permission to make the request
+	b, err := Authorized(r.Header.Get("Authorization"), id)
+	if b == false {
+		ctx.Logger.WithError(err).Error("Token error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// Call the function make user "id" unban the user "followId"
 	err = rt.db.UnbanUser(id, banId)
 	if err != nil {

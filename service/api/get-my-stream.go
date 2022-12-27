@@ -21,6 +21,14 @@ func (rt *_router) getMyStream(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
+	// Check if user have permission to make the request
+	b, err := Authorized(r.Header.Get("Authorization"), id)
+	if b == false {
+		ctx.Logger.WithError(err).Error("Token error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// Call the function to change the name
 	dbPhotos, err := rt.db.GetStream(id)
 	if err != nil {

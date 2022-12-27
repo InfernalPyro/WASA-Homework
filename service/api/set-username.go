@@ -20,6 +20,14 @@ func (rt *_router) setMyUserName(w http.ResponseWriter, r *http.Request, ps http
 		return
 	}
 
+	// Check if user have permission to make the request
+	b, err := Authorized(r.Header.Get("Authorization"), id)
+	if b == false {
+		ctx.Logger.WithError(err).Error("Token error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// Read the new username from the request body.
 	var sess Session
 	err = json.NewDecoder(r.Body).Decode(&sess)

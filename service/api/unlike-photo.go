@@ -27,6 +27,14 @@ func (rt *_router) unlikePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
+	// Check if user have permission to make the request
+	b, err := Authorized(r.Header.Get("Authorization"), id)
+	if b == false {
+		ctx.Logger.WithError(err).Error("Token error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// Call the function make user "id" follow the user "followId"
 	err = rt.db.UnlikePhoto(id, photoId)
 	if err != nil {

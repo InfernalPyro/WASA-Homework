@@ -1,6 +1,10 @@
 package api
 
 import (
+	"errors"
+	"strconv"
+	"strings"
+
 	"github.com/InfernalPyro/WASA-Homework/service/database"
 )
 
@@ -10,11 +14,6 @@ type Session struct {
 
 type Image struct {
 	Image string `json:"image"`
-}
-
-type ApiComment struct {
-	Comment string `json:"comment"`
-	UserId  uint64 `json:"userId"`
 }
 
 type Comment struct {
@@ -95,4 +94,29 @@ func (p *Photo) PhotoFromDatabase(photo database.Photo, comments []database.Comm
 		p.Comments = append(p.Comments, comment)
 	}
 	return
+}
+
+// This function convert an api photo to a database one
+func PhotoToDatabase(photo Photo) database.Photo {
+	var p database.Photo
+	p.PhotoId = photo.PhotoId
+	p.UserId = photo.ProfileId
+	p.Image = photo.Image
+	p.Time = photo.Time
+
+	return p
+}
+
+// Function to check if id is authorized to make the operation
+func Authorized(bearer string, id uint64) (bool, error) {
+	// First get the token
+	if bearer == "" {
+		return false, errors.New("Token not found")
+	}
+	// And then check if the logged user id is the same as the token
+	token := strings.Split(bearer, " ")
+	if token[1] != strconv.FormatUint(uint64(id), 10) {
+		return false, errors.New("User does not have permission")
+	}
+	return true, nil
 }

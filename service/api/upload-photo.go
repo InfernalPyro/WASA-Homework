@@ -20,19 +20,28 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
-	// Read the image from the request body.
-	var bImage string
-	err = json.NewDecoder(r.Body).Decode(&bImage)
-	if err != nil {
-		// The body was not a parseable JSON, reject it
-		// IL problema è qui, non riesco a leggere l'immagine passata dal request body
-		ctx.Logger.WithError(err).Error("User not found")
-		w.WriteHeader(http.StatusNotFound)
+	// Check if user have permission to make the request
+	b, err := Authorized(r.Header.Get("Authorization"), id)
+	if b == false {
+		ctx.Logger.WithError(err).Error("Token error")
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// Call the function to change the name
-	dbPhoto, err := rt.db.UploadPhoto(id, bImage)
+	// Read the image from the request body.
+	var apiPhoto Photo
+	err = json.NewDecoder(r.Body).Decode(&apiPhoto)
+	if err != nil {
+		// The body was not a parseable JSON, reject it
+		ctx.Logger.WithError(err).Error("Can't read image")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	dbPhoto := PhotoToDatabase(apiPhoto)
+
+	// Call the function to upload the photo
+	dbPhoto, err = rt.db.UploadPhoto(id, dbPhoto)
 	if err != nil {
 		if errors.Is(err, database.ErrUserNotFound) {
 			ctx.Logger.WithError(err).Error("User not found")
@@ -47,11 +56,10 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	// The photo just got published so it surely won't have comments nor likes
 	var comments []database.Comment
 	var likes []database.Like
-	var photo Photo
 	// Convert the photo from database to api form
-	photo.PhotoFromDatabase(dbPhoto, comments, likes)
+	apiPhoto.PhotoFromDatabase(dbPhoto, comments, likes)
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(photo)
+	_ = json.NewEncoder(w).Encode(apiPhoto)
 }

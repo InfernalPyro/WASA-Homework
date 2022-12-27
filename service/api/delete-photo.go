@@ -25,6 +25,14 @@ func (rt *_router) deletePhoto(w http.ResponseWriter, r *http.Request, ps httpro
 		return
 	}
 
+	// Check if user have permission to make the request
+	b, err := Authorized(r.Header.Get("Authorization"), id)
+	if b == false {
+		ctx.Logger.WithError(err).Error("Token error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// Call the function to delete the comment
 	err = rt.db.DeletePhoto(id, photoId)
 	if err != nil {

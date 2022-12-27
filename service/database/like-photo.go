@@ -12,7 +12,7 @@ func (db *appdbimpl) LikePhoto(id uint64, photoId uint64) error {
 	// Query to insert the new like
 	_, err = tx.Exec("INSERT into like (userId,photoId) values (?,?)", id, photoId)
 	if err != nil {
-		if err.Error() == "FOREIGN KEY constraint failed" {
+		if err.Error() == ErrForeignKey {
 			err = ErrPhotoNotFound
 		}
 		if tx.Rollback() != nil {

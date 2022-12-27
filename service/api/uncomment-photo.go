@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/InfernalPyro/WASA-Homework/service/api/reqcontext"
+	"github.com/InfernalPyro/WASA-Homework/service/database"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -21,6 +22,22 @@ func (rt *_router) uncommentPhoto(w http.ResponseWriter, r *http.Request, ps htt
 	photoId, err := strconv.ParseUint(ps.ByName("photoId"), 10, 64)
 	if err != nil {
 		// The value was not uint64, reject the action indicating an error on the client side.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	// We first need to get the owner of the comment we're trying to delete and then we check if the logged user is the owner
+	var comment database.Comment
+	comment, err = rt.db.GetComment(commentId, photoId)
+	if err != nil {
+		ctx.Logger.WithError(err).Error("Can't remove the comment")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	// Check if user have permission to make the request
+	b, err := Authorized(r.Header.Get("Authorization"), comment.UserId)
+	if b == false {
+		ctx.Logger.WithError(err).Error("Token error")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
