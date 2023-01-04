@@ -36,13 +36,13 @@ func (db *appdbimpl) LoginUser(username string) (int64, error) {
 	if err != nil {
 		return id, err
 	}
+	defer func() { _ = row.Close() }()
 	if row.Next() {
 		err = row.Scan(&id)
 		if err != nil {
 			return id, err
 		}
 	}
-	defer func() { _ = row.Close() }()
 	if err = row.Err(); err != nil {
 		return id, err
 	}

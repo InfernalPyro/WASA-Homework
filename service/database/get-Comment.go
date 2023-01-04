@@ -19,6 +19,7 @@ func (db *appdbimpl) GetComment(commentId uint64, photoId uint64) (Comment, erro
 		}
 		return comment, err
 	}
+	defer func() { _ = row.Close() }()
 	if row.Next() {
 		err = row.Scan(&comment.CommentId, &comment.UserId, &comment.PhotoId, &comment.Content, &comment.Time)
 		if err != nil {
@@ -26,7 +27,6 @@ func (db *appdbimpl) GetComment(commentId uint64, photoId uint64) (Comment, erro
 		}
 	}
 
-	defer func() { _ = row.Close() }()
 	if err = row.Err(); err != nil {
 		return comment, err
 	}

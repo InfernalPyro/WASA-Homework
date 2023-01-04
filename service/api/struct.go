@@ -115,7 +115,7 @@ func Authorized(bearer string, id uint64) (bool, error) {
 	}
 	// And then check if the logged user id is the same as the token
 	token := strings.Split(bearer, " ")
-	if token[1] != strconv.FormatUint(uint64(id), 10) {
+	if token[1] != strconv.FormatUint(id, 10) {
 		return false, errors.New("User does not have permission")
 	}
 	return true, nil
