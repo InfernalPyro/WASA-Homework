@@ -4,3 +4,13 @@ Authorization: Bearer 2
 
 
 
+sudo bash ./open-npm.sh
+npm run build-embed
+exit
+go build -tags webui ./cmd/webapi/
+
+
+sudo bash ./open-npm.sh
+npm run dev
+
+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
