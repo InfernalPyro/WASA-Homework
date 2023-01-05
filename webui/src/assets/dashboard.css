@@ -12,19 +12,12 @@ body {
  */
 
 .sidebar {
-	position: fixed;
-	top: 0;
-
-	/* rtl:raw:
-	right: 0;
-	*/
-	bottom: 0;
-
-	/* rtl:remove */
-
-	left: 0;
+	position:fixed;
+	border-right: white;
+	border-right-style: solid;
+	border-right-width:0.2px ;
 	z-index: 100; /* Behind the navbar */
-	padding: 48px 0 0; /* Height of navbar */
+	padding: 0 0 0; /* Height of navbar */
 	box-shadow: inset -1px 0 0 rgba(0 0 0 / 10%);
 }
 
@@ -38,25 +31,27 @@ body {
 	height: calc(100vh - 48px);
 	overflow-x: hidden;
 	overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+	background-color: rgb(88, 90, 95);
+
 }
 
 .sidebar .nav-link {
 	font-weight: 500;
-	color: #333;
+	color: rgb(0, 0, 0)
 }
 
 .sidebar .nav-link .feather {
 	margin-right: 4px;
-	color: #727272;
+	color: #000000;
 }
 
 .sidebar .nav-link.active, .sidebar .router-link-active {
-	color: #2470dc;
+	color: #ffffff;
 }
 
 .sidebar .nav-link:hover .feather,
 .sidebar .nav-link.active .feather {
-	color: inherit;
+	color: #ffffff;
 }
 
 .sidebar-heading {
@@ -70,8 +65,12 @@ body {
 .navbar-brand {
 	padding-top: 0.75rem;
 	padding-bottom: 0.75rem;
-	background-color: rgba(0 0 0 / 25%);
-	box-shadow: inset -1px 0 0 rgba(0 0 0 / 25%);
+	
+}
+
+.navbar {
+	flex-direction: row;
+	padding-bottom: 20px;	
 }
 
 .navbar .navbar-toggler {

@@ -4,6 +4,9 @@ Authorization: Bearer 2
 
 
 
+go build ./cmd/webapi/
+./webapi
+
 sudo bash ./open-npm.sh
 npm run build-embed
 exit
