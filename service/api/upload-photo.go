@@ -5,7 +5,6 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
-
 	"github.com/InfernalPyro/WASA-Homework/service/api/reqcontext"
 	"github.com/InfernalPyro/WASA-Homework/service/database"
 	"github.com/julienschmidt/httprouter"
@@ -29,14 +28,16 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	// Read the image from the request body.
-	var apiPhoto Photo
-	err = json.NewDecoder(r.Body).Decode(&apiPhoto)
+	var image Image
+	err = json.NewDecoder(r.Body).Decode(&image)
 	if err != nil {
 		// The body was not a parseable JSON, reject it
 		ctx.Logger.WithError(err).Error("Can't read image")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	var apiPhoto Photo
+	apiPhoto.Image = image.Image
 
 	dbPhoto := PhotoToDatabase(apiPhoto)
 

@@ -49,7 +49,7 @@ export default {
 		    <div class="container">
                 <!--First row contains the image-->
                 <div class="row">
-                    <img src = "waa">
+                    <!--<img src = "data:image/gif;base64,........">-->
                 </div>
                 <!--Second row contains likes and comment-->
                 <div class="row justify-content-around">
@@ -71,7 +71,7 @@ export default {
 
 
         <!--This is a fixed in page column that contains the profile informations-->
-        <div class="col-auto" style="padding-right: 100px; border-left-style: solid;">
+        <div class="col-3" style="padding-right: 100px; border-left-style: solid;">
             <li class="nav-item">
                 <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> Following
             </li>

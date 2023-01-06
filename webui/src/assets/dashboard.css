@@ -13,7 +13,7 @@ body {
 
 .sidebar {
 	position:fixed;
-	border-right: white;
+	border-right: rgb(0, 0, 0);
 	border-right-style: solid;
 	border-right-width:0.2px ;
 	z-index: 100; /* Behind the navbar */
@@ -31,7 +31,7 @@ body {
 	height: calc(100vh - 48px);
 	overflow-x: hidden;
 	overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-	background-color: rgb(88, 90, 95);
+	background-color: rgb(255, 255, 255);
 
 }
 
