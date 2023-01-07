@@ -1,10 +1,21 @@
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
 <script>
+
+//This variable contains the id of the user that have been stored after the login. 
+//We will use this in the url
+//var path = localStorage.getItem('storedData');
+//This variable contains the token that have been stored after the login.
+var token = localStorage.getItem('storedData');
+
 export default {
 	data: function() {
 		return {
 			errormsg: null,
 			loading: false,
-			some_data: null,
+			profile: null,
+			path : localStorage.getItem('storedData')
 		}
 	},
 	methods: {
@@ -12,8 +23,16 @@ export default {
 			this.loading = true;
 			this.errormsg = null;
 			try {
-				let response = await this.$axios.get("/");
-				this.some_data = response.data;
+				let response = await this.$axios({
+                    method:"get",
+                    url:'/user/' + this.path + '/profile',
+                    headers:{
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token,
+                    }
+                });
+				this.profile = response.data;
+                document.getElementById("username").textContent = this.profile.username
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
@@ -21,35 +40,20 @@ export default {
 		},
 	},
 	mounted() {
-		this.refresh()
+        this.$nextTick(function(){
+			console.log("Local from Home " + localStorage.getItem('storedData'))
+           	
+        })
+		
 	}
+
+
 }
 </script>
 
 <template>
-	<div>
-		<div
-			class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-			<h1 class="h2">Home page</h1>
-			<div class="btn-toolbar mb-2 mb-md-0">
-				<div class="btn-group me-2">
-					<button type="button" class="btn btn-sm btn-outline-secondary" @click="refresh">
-						Refresh
-					</button>
-					<button type="button" class="btn btn-sm btn-outline-secondary" @click="exportList">
-						Export
-					</button>
-				</div>
-				<div class="btn-group me-2">
-					<button type="button" class="btn btn-sm btn-outline-primary" @click="newItem">
-						New
-					</button>
-				</div>
-			</div>
-		</div>
 
-		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
-	</div>
+
 </template>
 
 <style>
