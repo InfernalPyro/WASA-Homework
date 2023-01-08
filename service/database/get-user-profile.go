@@ -120,7 +120,7 @@ func (db *appdbimpl) GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban,
 
 	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 	// Query to get the photos
-	row, err = tx.Query("SELECT photoId,userId,hex(image),time FROM photo where userId = ?; ", id)
+	row, err = tx.Query("SELECT photoId,userId,image,time FROM photo where userId = ? order by time desc; ", id)
 	if err != nil {
 		return nil, nil, nil, nil, nil, nil, nil, err
 	}

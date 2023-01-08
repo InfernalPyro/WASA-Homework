@@ -1,72 +1,64 @@
 <script>
+import PhotoItem from '../components/PhotoItem.vue';
+
+
 
 export default {
-	data: function() {
-		return {
-			errormsg: null,
-			loading: false,
-			profile: null,
-		}
-	},
-	methods: {
-		async refresh() {
-			this.loading = true;
-			this.errormsg = null;
-			try {
-				let response = await this.$axios({
-                    method:"get",
-                    url:'/user/' + 1 + '/profile',
-                    headers:{
+
+    data: function () {
+        return {
+            errormsg: null,
+            loading: false,
+            profile: null,
+            photos : null,
+            //This variable contains the userId that have been passed in the path.
+            userId: this.$route.params.userId,
+            //This variable contains the token that have been stored after the login.
+            token: localStorage.getItem("storedData"),
+        };
+    },
+    methods: {
+        async refresh() {
+            this.loading = true;
+            this.errormsg = null;
+            try {
+                let response = await this.$axios({
+                    method: "get",
+                    url: "/user/" + this.userId + "/profile",
+                    headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer 1",
+                        "Authorization": "Bearer " + this.token,
                     }
                 });
-				this.profile = response.data;
-                document.getElementById("username").textContent = this.profile.username
-			} catch (e) {
-				this.errormsg = e.toString();
-			}
-			this.loading = false;
-		},
-	},
-	mounted() {
-        this.$nextTick(function(){
-           this.refresh() 
-        })
-		
-	}
+                this.profile = response.data;
+                this.photos = this.profile.photos;
+                document.getElementById("username").textContent = this.profile.username;
+            }
+            catch (e) {
+                this.errormsg = e.toString();
+            }
+            this.loading = false;
+        },
+    },
+    mounted() {
+        this.$nextTick(function () {
+            this.refresh();
+        });
+    },
+    components: { PhotoItem }
 }
 
 </script>
 
 <template>
-    <div class="row justify-content-between">
-
+    <div class="row justify-content-between">  
 
         <!--This column contains all the photos in the stream--> 
-        <div class="col-auto">
-            <!--Each container is made of the photo and the likes and comment buttons-->
-		    <div class="container">
-                <!--First row contains the image-->
-                <div class="row">
-                    <!--<img src = "data:image/gif;base64,........">-->
-                </div>
-                <!--Second row contains likes and comment-->
-                <div class="row justify-content-around">
-                    <div class="col">
-                        <li class="nav-item">
-                            <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg> 
-                        </li>
-                    </div>
-                    <div class="col">
-                        <li class="nav-item">
-                            <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#message-square"/></svg> 
-                        </li>
-                    </div>                   
-                </div>
+        <div class="col-auto text-center" style="padding-left: 12%;">
+            <!--Each container is made of the photo and the likes and comment buttons-->	    
+            <div>
+                <PhotoItem v-for= "photo in photos" :images="photo" ></PhotoItem>
             </div>
-
-
 	    </div>
 
 

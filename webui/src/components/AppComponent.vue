@@ -3,34 +3,28 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 <script>
 
-//This variable contains the id of the user that have been stored after the login. 
-//We will use this in the url
-//var path = localStorage.getItem('storedData');
-//This variable contains the token that have been stored after the login.
-var token = localStorage.getItem('storedData');
-
-
-
-
-
 export default {
 	data: function() {
 		return {
-			path : localStorage.getItem('storedData')
+			//This variable contains the id of the user that have been stored after the login. 
+			//We will use this in the url
+			path : localStorage.getItem('storedData'),
+			//This variable contains the token that have been stored after the login.
+			token : localStorage.getItem('storedData')
 		}
 	},
     methods:{
-        async updatePath(){
-            
+		//Function called by the event triggerd on login
+        async updatePath(){           
             this.path = localStorage.getItem('storedData'); 
-            console.log("Funzione")
         },
+		//Function called when disconnecting 
         async disconnect(){
             localStorage.setItem('storedData', null); 
+			this.path = null 
         }
     },
 	mounted() {
-		console.log("Local from App " + localStorage.getItem('storedData'))
         this.path = localStorage.getItem('storedData'); 
     }
 }
@@ -39,8 +33,8 @@ export default {
 
 <template>
 
+	<!--Show this for every view EXCEPT login-->
 	<div v-if="this.$route.name != 'login'">
-
 		<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
 			<div class="col-3">
 				<a class="navbar-brand" href="#/">Wasa Photo</a>
@@ -67,13 +61,13 @@ export default {
 								</RouterLink>
 							</li>
 							<li class="nav-item">
-								<RouterLink to="/profile" class="nav-link">
+								<RouterLink :to="{ name: 'profile', params: { userId: this.path }}" class="nav-link">
 									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user"/></svg>
 									Profile
 								</RouterLink>
 							</li>
 							<li class="nav-item">
-								<RouterLink :to="{ name: 'user', params: { userId: this.path }}" class="nav-link" >
+								<RouterLink :to="{ name: 'photo', params: { userId: this.path }}" class="nav-link" >
 									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#camera"/></svg>
 									Upload
 								</RouterLink>
@@ -92,12 +86,11 @@ export default {
 							</li>
 						</ul>
 					</div>
-				</nav>
-
-				
+				</nav>	
 			</div>
 		</div>
 	</div>
+
 	<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 		<RouterView @localEvent = "updatePath"></RouterView>
 	</main>

@@ -1,7 +1,6 @@
 <script>
 
-var base64String = "";
-
+var base64String = null;
 
 export default {
 	data: function() {
@@ -9,6 +8,11 @@ export default {
 			errormsg: null,
 			loading: false,
 			profile: null,
+            //This variable contains the userId that have been passed in the path.
+            userId: this.$route.params.userId,
+            //This variable contains the token that have been stored after the login.
+			token : localStorage.getItem('storedData'),
+            
 		}
 	},
 	methods: {
@@ -18,10 +22,10 @@ export default {
 			try {
 				let response = await this.$axios({
                     method:"get",
-                    url:'/user/' + 1 + '/profile',
+                    url:'/user/' + this.userId + '/profile',
                     headers:{
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer 1",
+                        "Authorization": "Bearer " + this.token,
                     }
                 });
 				this.profile = response.data;
@@ -32,39 +36,33 @@ export default {
 			this.loading = false;
 		},
 
-        uploadPhoto: async function () {
+        async uploadPhoto() {
 			this.loading = true;
 			this.errormsg = null;
-
 			try {
                 let config ={
                     headers:{
                         'Content-Type': "application/json",
-                        "Authorization": "Bearer 1",
+                        "Authorization": "Bearer " + this.token,
                     }
                 }
                 let data ={
                     "image" : base64String
                 }
 
-				let response = await this.$axios.post('/user/'+ 1 + '/photo/', data, config);
+				let response = await this.$axios.post('/user/'+ this.userId + '/photo/', data, config);
 				this.$router.push("/profile");
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
 			this.loading = false;
-		}
+		},
 
-	},
-	mounted() {
-        this.$nextTick(function(){
-           this.refresh() 
-
-        document.getElementById('photo').addEventListener('change', function() {
-            /*Show the photo on screen before uploading it*/ 
+        async convertPhoto(){
             var file = document.getElementById('photo').files[0];
             var reader  = new FileReader();
             reader.onload = function(e)  {
+                /*Show the photo on screen before uploading it*/ 
                 var image = document.createElement("img");
                 image.src = e.target.result;
                 const container = document.querySelector("#imageContainer");
@@ -72,26 +70,20 @@ export default {
                     container.removeChild(container.lastChild);
                 }
                 container.appendChild(image);
+                
+                /*And convert in base64*/ 
+                /*This will contain the base64 string*/
+                base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
             }
             reader.readAsDataURL(file);
-
-            /*Convert in base64*/ 
-            var file = document.querySelector(
-                'input[type=file]')['files'][0];
-     
-            var reader = new FileReader();         
-            reader.onload = function () {
-                /*This will contain the base64 string*/
-                base64String = reader.result.replace("data:", "")
-                    .replace(/^.+,/, "");
-            
-            }       
-            reader.readAsDataURL(file);
-
             document.getElementById("uploadButton").disabled = false;
-            
-        })
 
+        },
+
+	},
+	mounted() {
+        this.$nextTick(function(){
+            this.refresh() 
 
         })		
 	} 
@@ -104,13 +96,14 @@ export default {
 <template>
     <div class="row justify-content-between">
 
+        <LoadingSpinner v-if="loading"></LoadingSpinner>
 
         <!--This column contains all the photos in the stream--> 
         <div class="col-8">
             <div class="row">
                 <h1 class="center">Upload a new photo</h1>
                 <div id="rbHiderFillTop"></div>
-                <input type="file" accept="image/*" id="photo">
+                <input type="file" accept="image/*" id="photo" @change="convertPhoto">
             </div>
             
             <div id="rbHiderFillTop"></div>
@@ -119,11 +112,7 @@ export default {
 
                 </div>
             </div>
-           
-			    
-			<LoadingSpinner v-if="loading"></LoadingSpinner>
 	    </div>
-
 
         <!--This is a fixed in page column that contains the profile informations-->
         <div class="col-3" style="padding-right: 100px; border-left-style: solid;">
@@ -133,6 +122,7 @@ export default {
 			    </button>
             </div>
         </div>
+
 
     </div>
 	

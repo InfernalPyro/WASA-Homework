@@ -39,7 +39,7 @@ import (
 type Photo struct {
 	PhotoId uint64
 	UserId  uint64
-	Image   string
+	Image   []byte
 	Time    string
 }
 

@@ -70,8 +70,6 @@ func run() error {
 		return err
 	}
 
-	cfg.DB.Filename = "/media/sf_WASA-Homework/database.db"
-
 	// Init logging
 	logger := logrus.New()
 	logger.SetOutput(os.Stdout)
@@ -99,7 +97,7 @@ func run() error {
 		logger.WithError(err).Error("error creating AppDatabase")
 		return fmt.Errorf("creating AppDatabase: %w", err)
 	}
-
+	
 	// Start (main) API server
 	logger.Info("initializing API server")
 

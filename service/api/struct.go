@@ -4,7 +4,6 @@ import (
 	"errors"
 	"strconv"
 	"strings"
-	
 	"github.com/InfernalPyro/WASA-Homework/service/database"
 )
 
@@ -79,7 +78,7 @@ func (u *User) UserFromDatabase(user database.User, follow []database.Follow, fo
 func (p *Photo) PhotoFromDatabase(photo database.Photo, comments []database.Comment, likes []database.Like) {
 	p.PhotoId = photo.PhotoId
 	p.ProfileId = photo.UserId
-	p.Image = photo.Image
+	p.Image = string(photo.Image[:])
 	p.Time = photo.Time
 	for _, l := range likes {
 		p.Likes = append(p.Likes, l.UserId)
@@ -101,7 +100,7 @@ func PhotoToDatabase(photo Photo) database.Photo {
 	var p database.Photo
 	p.PhotoId = photo.PhotoId
 	p.UserId = photo.ProfileId
-	p.Image = photo.Image
+	p.Image = []byte(photo.Image)
 	p.Time = photo.Time
 
 	return p
