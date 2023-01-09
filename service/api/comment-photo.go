@@ -27,6 +27,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	err = json.NewDecoder(r.Body).Decode(&apiComment)
 	if err != nil {
 		// The body was not a parseable JSON, reject it
+		ctx.Logger.WithError(err).Error("Can't read comment")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

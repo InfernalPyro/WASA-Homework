@@ -35,7 +35,7 @@ export default {
 
 	<!--Show this for every view EXCEPT login-->
 	<div v-if="this.$route.name != 'login'">
-		<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+		<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" >
 			<div class="col-3">
 				<a class="navbar-brand" href="#/">Wasa Photo</a>
 			</div>

@@ -1,0 +1,88 @@
+
+<script>
+
+
+export default {
+    props: ['comm','userId','profileId'],
+    data() {
+        return {
+            comment: this.comm,
+            myId: this.userId,
+            prId: this.profileId,
+            token: localStorage.getItem("storedData"), 
+
+        }
+    },
+    methods: {
+        async blockUser() {
+            this.loading = true;
+            this.errormsg = null;
+            try {
+                let response = await this.$axios({
+                    method: "put",
+                    url: "/user/" + this.myId + "/ban/" + this.comment.userId, 
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + this.token,
+                    }
+                });
+            }
+            catch (e) {
+                this.errormsg = e.toString();
+            }
+            this.loading = false;
+        },
+        async deleteComment() {
+            this.loading = true;
+            this.errormsg = null;
+            try {
+                let response = await this.$axios({
+                    method: "delete",
+                    url: "/profile/" + this.prId + "/photo/" + this.comment.photoId + "/comments/" + this.comment.commentId,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + this.token,
+                    }
+                });
+            }
+            catch (e) {
+                this.errormsg = e.toString();
+            }
+            this.loading = false;
+        },
+    },
+
+    created() {
+
+    },
+};
+</script>
+<template>
+    <div class="container" style="width: 30vw;">
+        <div class="row justify-content-end">
+            <div class="col">{{this.comment.userId}}</div>
+            <div class="col-2">
+                <!-- Default dropright button -->
+                <div class="dropdown">
+                    <button class="btn" @click="options" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0; border:0;">
+                        <svg class="feather" style="stroke-width:2">
+                            <use href="/feather-sprite-v4.29.0.svg#more-vertical" />
+                        </svg>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li v-if="this.comment.userId != this.myId">
+                            <a class="dropdown-item" @click="blockUser">Block User</a>
+                        </li>
+                        <li v-else>
+                            <a class="dropdown-item" @click="deleteComment">Delete Comment</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="rbHiderFillTop" style="height: 20px;"></div>
+
+        {{ this.comment.comment }}
+        <footer>{{ this.comment.time }}</footer>
+    </div>
+</template>

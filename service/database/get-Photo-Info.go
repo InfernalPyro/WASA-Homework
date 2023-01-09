@@ -1,7 +1,7 @@
 package database
 
 // Get photo likes and comments from it's id
-func (db *appdbimpl) GetPhotoInfo(photoId uint64) ([]Comment, []Like, error) {
+func (db *appdbimpl) GetPhotoInfo(photoId uint64, id uint64) ([]Comment, []Like, error) {
 
 	var comments []Comment
 	var likes []Like
@@ -14,7 +14,7 @@ func (db *appdbimpl) GetPhotoInfo(photoId uint64) ([]Comment, []Like, error) {
 
 	// +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 	// Query to get the comments
-	row, err := tx.Query("SELECT * FROM comment WHERE ? == photoId", photoId)
+	row, err := tx.Query("SELECT * FROM comment where photoId = ? and userId not in (SELECT banned from ban where userId = ? ) order by time desc", photoId,id)
 	if err != nil {
 		return comments, likes, err
 	}
