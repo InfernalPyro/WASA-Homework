@@ -41,9 +41,8 @@ export default {
 	},
 	mounted() {
         this.$nextTick(function(){
-			console.log("Local from Home " + localStorage.getItem('storedData'))
-           	
-        })
+            this.refresh() 
+        })	
 		
 	}
 

@@ -2,7 +2,6 @@
 import PhotoItem from '../components/PhotoItem.vue';
 
 
-
 export default {
 
     data: function () {
@@ -11,8 +10,12 @@ export default {
             loading: false,
             profile: null,
             photos : null,
-            //This variable contains the userId that have been passed in the path.
-            userId: this.$route.params.userId,
+            //This variable contains the userId that have been passed in the path (id of the profile).
+            profileId: this.$route.params.userId,
+            //This division is needed because a user can access another user profile so we need both the 
+            // id of the user that's visiting and the id of the owner
+            //This variable contains the id of the logged user.
+            userId: localStorage.getItem("storedData"),
             //This variable contains the token that have been stored after the login.
             token: localStorage.getItem("storedData"),
         };
@@ -24,10 +27,9 @@ export default {
             try {
                 let response = await this.$axios({
                     method: "get",
-                    url: "/user/" + this.userId + "/profile",
+                    url: "/user/" + this.profileId + "/profile",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer " + this.token,
                     }
                 });
                 this.profile = response.data;

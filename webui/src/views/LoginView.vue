@@ -64,7 +64,7 @@ export default {
     <h1>Login</h1>
 	<label for="username">Username:</label>
   	<input type="text" id="username" name="username" minlenght = "3" maxlenght = "16" pattern = "^[a-zA-Z0-9 ]*$"><br><br>
-	<button @click="login()">Login</button>
+	<button @click="login">Login</button>
 </template>
 
 <style>

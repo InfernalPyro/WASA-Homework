@@ -35,7 +35,7 @@ export default {
 
 	<!--Show this for every view EXCEPT login-->
 	<div v-if="this.$route.name != 'login'">
-		<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" >
+		<header class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow" >
 			<div class="col-3">
 				<a class="navbar-brand" href="#/">Wasa Photo</a>
 			</div>
@@ -51,8 +51,8 @@ export default {
 
 		<div class="container-fluid">
 			<div class="row">
-				<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-					<div class="position-sticky pt-3 sidebar-sticky">
+				<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" style="height:fit-content;">
+					<div class="position-sticky pt-3 ">
 						<ul class="nav flex-column">
 							<li class="nav-item">
 								<RouterLink to="/" class="nav-link">
@@ -73,7 +73,7 @@ export default {
 								</RouterLink>
 							</li>
 							<li class="nav-item">
-								<RouterLink to="/link3" class="nav-link">
+								<RouterLink :to="{ name: 'options', params: { userId: this.path }}" class="nav-link">
 									<svg class="feather"><use href="/feather-sprite-v4.29.0.svg#settings"/></svg>
 									Options
 								</RouterLink>
@@ -92,7 +92,7 @@ export default {
 	</div>
 
 	<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-		<RouterView @localEvent = "updatePath"></RouterView>
+		<RouterView :key="$route.fullPath" @localEvent = "updatePath"></RouterView>
 	</main>
 </template>
 
