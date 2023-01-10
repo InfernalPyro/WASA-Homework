@@ -47,7 +47,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	var photos []Photo
 	for _, p := range *dbPhotos {
 		var photo Photo
-		comments, likes, err := rt.db.GetPhotoInfo(p.PhotoId,id)
+		comments, likes, err := rt.db.GetPhotoInfo(p.PhotoId, id)
 		if err != nil {
 			ctx.Logger.WithError(err).Error("Can't get photo info")
 			w.WriteHeader(http.StatusInternalServerError)

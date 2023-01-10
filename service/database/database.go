@@ -84,7 +84,7 @@ type AppDatabase interface {
 	ChangeName(id uint64, newUsername string) error
 	GetStream(id uint64) ([]Photo, error)
 	GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban, *[]Comment, *[]Photo, *[]Like, error)
-	GetPhotoInfo(photoId uint64,id uint64) ([]Comment, []Like, error)
+	GetPhotoInfo(photoId uint64, id uint64) ([]Comment, []Like, error)
 	FollowUser(id uint64, followId uint64) error
 	UnfollowUser(id uint64, followId uint64) error
 	BanUser(id uint64, banId uint64) error
