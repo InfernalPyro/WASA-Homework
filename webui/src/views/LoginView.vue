@@ -53,9 +53,7 @@ export default {
 		["localEvent"], 
 
 	mounted() {
-		this.$nextTick(function(){
-			localStorage.setItem('storedData', null)
-		})
+		localStorage.setItem('storedData', null)		
 	}
 }
 
