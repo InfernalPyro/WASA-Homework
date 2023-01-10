@@ -14,20 +14,17 @@ const router = createRouter({
 	]
 })
 
-
-var logged = localStorage.getItem('storedData');
 router.beforeEach((to, from, next) => {
-	if (to.matched.some(record => record.meta.requiresAuth)) {
-	  // this route requires auth, check if logged in
-	  // if not, redirect to login page.
-	  if (logged === null || logged === "") {
-		next({ name: 'login'})
-	  } else {
-		next() // go to wherever I'm going
-	  }
+	const token = localStorage.getItem('storedData')
+	// If logged in, or going to the Login page.
+	if (token == null || to.name === 'login') {
+		// Continue to page.
+		next()
 	} else {
-	  next() // does not require auth, make sure to always call next()!
+		// Not logged in, redirect to login.
+		next({name: 'login'})
 	}
-  })
+})
+
 
 export default router
