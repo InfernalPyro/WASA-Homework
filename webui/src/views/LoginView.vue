@@ -38,7 +38,7 @@ export default {
 				let response = await this.$axios.post('/session', data, config);
 				this.userId = response.data;
 				
-				localStorage.setItem('storedData', this.userId)
+				sessionStorage.setItem('storedData', this.userId)
 				this.$emit('localEvent')
 
 				this.$router.push("/");
@@ -53,7 +53,7 @@ export default {
 		["localEvent"], 
 
 	mounted() {
-		localStorage.setItem('storedData', null)		
+		sessionStorage.setItem('storedData', null)		
 	}
 }
 

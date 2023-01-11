@@ -8,25 +8,31 @@ export default {
 		return {
 			//This variable contains the id of the user that have been stored after the login. 
 			//We will use this in the url
-			path : localStorage.getItem('storedData'),
+			path : 0,
 			//This variable contains the token that have been stored after the login.
-			token : localStorage.getItem('storedData')
+			token : sessionStorage.getItem('storedData')
 		}
 	},
     methods:{
 		//Function called by the event triggerd on login
         async updatePath(){           
-            this.path = localStorage.getItem('storedData'); 
+            this.path = sessionStorage.getItem('storedData'); 
         },
 		//Function called when disconnecting 
         async disconnect(){
-            localStorage.setItem('storedData', null); 
+            sessionStorage.setItem('storedData', null); 
 			this.path = null 
         }
     },
 	mounted() {
-        this.path = localStorage.getItem('storedData'); 
-    }
+		if (sessionStorage.getItem('storedData') != null){
+			this.path = sessionStorage.getItem('storedData'); 
+		}
+		else{
+			this.path = 0;
+		}
+
+	}
 }
 
 </script>

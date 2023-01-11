@@ -15,9 +15,9 @@ export default {
             //This division is needed because a user can access another user profile so we need both the 
             // id of the user that's visiting and the id of the owner
             //This variable contains the id of the logged user.
-            userId: localStorage.getItem("storedData"),
+            userId: sessionStorage.getItem("storedData"),
             //This variable contains the token that have been stored after the login.
-            token: localStorage.getItem("storedData"),
+            token: sessionStorage.getItem("storedData"),
         };
     },
     methods: {

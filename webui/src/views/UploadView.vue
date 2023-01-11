@@ -11,7 +11,7 @@ export default {
             //This variable contains the userId that have been passed in the path.
             userId: this.$route.params.userId,
             //This variable contains the token that have been stored after the login.
-			token : localStorage.getItem('storedData'),
+			token : sessionStorage.getItem('storedData'),
             
 		}
 	},
@@ -51,7 +51,7 @@ export default {
                 }
 
 				let response = await this.$axios.post('/user/'+ this.userId + '/photo/', data, config);
-				this.$router.push("/profile");
+				this.$router.push("/user/"+ this.userId +"/profile");
 			} catch (e) {
 				this.errormsg = e.toString();
 			}

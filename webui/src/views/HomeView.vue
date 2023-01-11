@@ -7,7 +7,7 @@ import { RouterLink, RouterView } from 'vue-router'
 //We will use this in the url
 //var path = localStorage.getItem('storedData');
 //This variable contains the token that have been stored after the login.
-var token = localStorage.getItem('storedData');
+var token = sessionStorage.getItem('storedData');
 
 export default {
 	data: function() {
@@ -15,7 +15,7 @@ export default {
 			errormsg: null,
 			loading: false,
 			profile: null,
-			path : localStorage.getItem('storedData')
+			path : sessionStorage.getItem('storedData')
 		}
 	},
 	methods: {

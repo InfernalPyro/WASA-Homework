@@ -8,7 +8,7 @@ export default {
         return {
             photos: this.images,
             myId : this.id,
-            token: localStorage.getItem("storedData"),
+            token: sessionStorage.getItem("storedData"),
             likeCount: null,
             likeFlag: null,
             commentsCount: null,

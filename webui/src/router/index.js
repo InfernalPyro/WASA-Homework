@@ -17,7 +17,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-	const token = localStorage.getItem('storedData')
+	const token = sessionStorage.getItem('storedData')
 	// If logged in, or going to the Login page.
 	if (token != "null" || to.name === "login" ) {
 		// Continue to page.

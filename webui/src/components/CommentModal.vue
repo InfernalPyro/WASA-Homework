@@ -11,7 +11,7 @@ export default {
             phId: this.photoId,
             comments: this.comms,
             myId : this.id,
-            token: localStorage.getItem("storedData"), 
+            token: sessionStorage.getItem("storedData"), 
         }
     },
     methods: {

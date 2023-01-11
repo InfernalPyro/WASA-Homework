@@ -9,7 +9,7 @@ export default {
             comment: this.comm,
             myId: this.userId,
             prId: this.profileId,
-            token: localStorage.getItem("storedData"), 
+            token: sessionStorage.getItem("storedData"), 
 
         }
     },

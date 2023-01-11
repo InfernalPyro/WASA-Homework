@@ -6,7 +6,7 @@ export default {
         return {
             errormsg: null,
             loading: false,
-            token : localStorage.getItem('storedData'),
+            token : sessionStorage.getItem('storedData'),
             userId: this.$route.params.userId,
         };
     },
