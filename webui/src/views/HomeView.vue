@@ -3,11 +3,6 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 <script>
 
-//This variable contains the id of the user that have been stored after the login. 
-//We will use this in the url
-//var path = localStorage.getItem('storedData');
-//This variable contains the token that have been stored after the login.
-var token = sessionStorage.getItem('storedData');
 
 export default {
 	data: function() {
@@ -15,7 +10,14 @@ export default {
 			errormsg: null,
 			loading: false,
 			profile: null,
-			path : sessionStorage.getItem('storedData')
+			//This variable contains the id of the user that have been stored after the login. 
+			//We will use this in the url
+			path: sessionStorage.getItem('storedData'),
+			//var path = localStorage.getItem('storedData');
+			//This variable contains the token that have been stored after the login.
+			token: sessionStorage.getItem('storedData'),
+			bannedList: null,
+			followList: null,
 		}
 	},
 	methods: {
@@ -28,11 +30,21 @@ export default {
                     url:'/user/' + this.path + '/profile',
                     headers:{
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer " + token,
+                        "Authorization": "Bearer " + this.token,
                     }
                 });
 				this.profile = response.data;
                 document.getElementById("username").textContent = this.profile.username
+
+				//Those two session storage will contain both blocked and follow list 
+				//to avoid having to make a request each time to get them
+				
+				this.followList = this.profile.follows;
+				this.bannedList = this.profile.banned;
+				sessionStorage.setItem('followListData', this.followList);
+				sessionStorage.setItem('bannedListData', this.bannedList);
+
+
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
