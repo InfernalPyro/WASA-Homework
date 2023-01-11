@@ -81,6 +81,8 @@ paths:
           description: Invalid username supplied
         '404':
           description: User not found
+      security:
+        - Authentication: []
 
 
   /user/{userId}/home:

@@ -21,6 +21,12 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
+	if r.Header.Get("Authorization") == "" {
+		ctx.Logger.WithError(err).Error("Token error")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	// Call the function to get profile
 	dbUser, dbFollow, dbFollowed, dbBans, dbComments, dbPhotos, dbLikes, err := rt.db.GetProfile(id)
 	if err != nil {

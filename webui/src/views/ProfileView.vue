@@ -37,6 +37,7 @@ export default {
                     url: "/user/" + this.profileId + "/profile",
                     headers: {
                         "Content-Type": "application/json",
+                        'Authorization': "Bearer " + this.token,
                     }
                 });
                 this.profile = response.data;
