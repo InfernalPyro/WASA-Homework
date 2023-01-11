@@ -4,8 +4,8 @@
 
 export default {
     props: ['comm','userId','profileId'],
-    data() {
-        return {
+    data: function() {
+		return {
             comment: this.comm,
             myId: this.userId,
             prId: this.profileId,

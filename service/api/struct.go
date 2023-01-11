@@ -2,9 +2,9 @@ package api
 
 import (
 	"errors"
+	"github.com/InfernalPyro/WASA-Homework/service/database"
 	"strconv"
 	"strings"
-	"github.com/InfernalPyro/WASA-Homework/service/database"
 )
 
 type Session struct {

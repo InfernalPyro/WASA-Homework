@@ -4,8 +4,8 @@ import CommentModal from './CommentModal.vue';
 
 export default {
     props: ['images','id'],
-    data() {
-        return {
+    data: function() {
+		return {
             photos: this.images,
             myId : this.id,
             token: sessionStorage.getItem("storedData"),

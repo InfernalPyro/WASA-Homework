@@ -5,8 +5,8 @@ import CommentItem from './CommentItem.vue';
 export default {
     name: 'modal',
     props: ['comms', 'profileId', 'photoId', 'id'],
-    data() {
-        return {
+    data: function() {
+		return {
             prId: this.profileId,
             phId: this.photoId,
             comments: this.comms,

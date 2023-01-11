@@ -3,11 +3,11 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"net/http"
-	"strconv"
 	"github.com/InfernalPyro/WASA-Homework/service/api/reqcontext"
 	"github.com/InfernalPyro/WASA-Homework/service/database"
 	"github.com/julienschmidt/httprouter"
+	"net/http"
+	"strconv"
 )
 
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
