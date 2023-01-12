@@ -37,9 +37,9 @@ export default {
 
 				let response = await this.$axios.post('/session', data, config);
 				this.userId = response.data;
-				
-				sessionStorage.setItem('storedData', this.userId)
-				this.$emit('localEvent')
+				document.getElementById('username').value = "";
+				sessionStorage.setItem('storedData', this.userId);
+				this.$emit('localEvent');
 
 				this.$router.push("/");
 			} catch (e) {

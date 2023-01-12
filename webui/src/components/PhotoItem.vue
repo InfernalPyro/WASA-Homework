@@ -121,7 +121,6 @@ export default {
             }
 
             this.commentsCount = (this.photos.comments != null) ? this.photos.comments.length : 0
-           
         });
     },
     components: { CommentModal }
