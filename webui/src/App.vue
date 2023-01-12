@@ -35,22 +35,19 @@ export default {
 		
     },
 	mounted() {
-		 this.$nextTick(function(){
-			//By using this check if the browser have just been opened we will start with the loginview
-			//(does NOT work on refresh thanks to sessionStorage)
-			if (this.session == null){
-				this.$router.push("/session");
-			}
-        })	
-
-		if (sessionStorage.getItem('storedData') != "null"){
-			this.path = sessionStorage.getItem('storedData'); 
-			this.nameView = "";
-		}
-		else{
+		 
+		//By using this check if the browser have just been opened we will start with the loginview
+		//(does NOT work on refresh thanks to sessionStorage)
+		if (this.session == null){
+			this.$router.push("/session");
 			this.path = 0;
 			this.nameView = "login";
 		}
+		else{
+			this.path = sessionStorage.getItem('storedData'); 
+			this.nameView = "";
+		}
+		
 	}
 }
 

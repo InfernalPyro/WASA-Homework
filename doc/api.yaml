@@ -90,24 +90,23 @@ paths:
                 description: Ids and username of the users found
                 type: object
                 properties:
-                  id:
+                  idList:
+                    description: List of every id found 
                     type: array
                     minItems : 0
                     maxItems : 1000
                     items: 
                       type: integer
-                      example: 
-                      -  11
-                      -  12
-                  username:
+                      example: 11
+                  usernameList:
+                    description: List of every username found 
                     type: array
                     minItems : 0
                     maxItems : 1000
                     items: 
                       type: string
-                      example: 
-                      -  Maria
-                      -  Marco
+                      example: Maria
+
       security:
         - Authentication: []
 
