@@ -45,6 +45,7 @@ export default {
                 document.getElementById("username").textContent = this.profile.username; 
                 this.followFlag = this.followList.includes(this.profileId);
                 this.bannedFlag = this.bannedList.includes(this.profileId);
+
             }
             catch (e) {
                 this.errormsg = e.toString();
@@ -64,6 +65,7 @@ export default {
                     }
                 });  
                 this.bannedFlag = true;   
+                this.followFlag = false;
             }
             catch (e) {
                 this.errormsg = e.toString();
@@ -102,6 +104,7 @@ export default {
                     }
                 });
                 this.followFlag = true;
+                
             }
             catch (e) {
                 this.errormsg = e.toString();
@@ -156,7 +159,7 @@ export default {
             <!--If this profile is not yours there are the follow and block buttons too-->
             <div class="row">
                 <div class="col-auto">
-                    <button v-if="!loading && !this.followFlag && this.profileId != this.userId" type="button" id = "followButton" style="width: fit-container; margin-left:30%" @click="followUser">
+                    <button v-if="!loading &&  !this.followFlag && this.profileId != this.userId && !this.bannedFlag" type="button" id = "followButton" style="width: fit-container; margin-left:30%" @click="followUser">
 				        Follow
 			        </button>
                     <button v-else-if="!loading && this.followFlag && this.profileId != this.userId" type="button" id = "unfollowButton" style="width: fit-container; margin-left:30%" @click="unfollowUser">

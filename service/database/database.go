@@ -96,6 +96,7 @@ type AppDatabase interface {
 	GetComment(commentId uint64, photoId uint64) (Comment, error)
 	UploadPhoto(id uint64, bImage Photo) (Photo, error)
 	DeletePhoto(id uint64, photoId uint64) error
+	SearchUserByName(username string) ([]User, error)
 
 	Ping() error
 }

@@ -11,7 +11,7 @@ func (db *appdbimpl) GetComment(commentId uint64, photoId uint64) (Comment, erro
 		return comment, err
 	}
 
-	// Query to remove the like
+	// Query to rget the comment
 	row, err := tx.Query("SELECT * FROM comment where commentId = ? and photoId = ?", commentId, photoId)
 	if err != nil {
 		if tx.Rollback() != nil {
@@ -21,7 +21,7 @@ func (db *appdbimpl) GetComment(commentId uint64, photoId uint64) (Comment, erro
 	}
 	defer func() { _ = row.Close() }()
 	if row.Next() {
-		err = row.Scan(&comment.CommentId, &comment.UserId, &comment.PhotoId, &comment.Content, &comment.Time)
+		err = row.Scan(&comment.CommentId, &comment.PhotoId, &comment.UserId, &comment.Content, &comment.Time)
 		if err != nil {
 			return comment, err
 		}

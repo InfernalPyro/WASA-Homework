@@ -9,6 +9,7 @@ export default {
 			//This variable contains the id of the user that have been stored after the login. 
 			//We will use this in the url
 			path : 0,
+			userToFind : null,
 			//This variable contains the token that have been stored after the login.
 			token : sessionStorage.getItem('storedData')
 		}
@@ -22,7 +23,11 @@ export default {
         async disconnect(){
             sessionStorage.setItem('storedData', null); 
 			this.path = null 
-        }
+        },
+		async search() {
+			this.$router.push("/search");
+		},
+		
     },
 	mounted() {
 		if (sessionStorage.getItem('storedData') != null){
@@ -49,7 +54,7 @@ export default {
 				<a class="navbar-brand" id ="username" href="#/">Username</a>
 			</div>
 			<div class="col-3">
-				  <input type="text" class="topnav" placeholder="Search..">
+				  <button @click="search">Find other users</button>
 			</div>
 		</header>
 

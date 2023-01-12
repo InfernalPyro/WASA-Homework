@@ -22,7 +22,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 	}
 
 	if r.Header.Get("Authorization") == "" {
-		ctx.Logger.WithError(err).Error("Token error")
+		ctx.Logger.WithError(errors.New("Token not found")).Error("Token error")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

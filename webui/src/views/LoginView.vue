@@ -48,12 +48,13 @@ export default {
 			
 			this.loading = false;
 		},
+		
 	},
 	emits: 
 		["localEvent"], 
 
 	mounted() {
-		sessionStorage.setItem('storedData', null)		
+		sessionStorage.setItem('storedData', null);
 	}
 }
 

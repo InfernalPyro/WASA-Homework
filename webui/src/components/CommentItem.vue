@@ -60,7 +60,7 @@ export default {
 <template>
     <div class="container" style="width: 30vw;">
         <div class="row justify-content-end">
-            <div class="col">{{this.comment.userId}}</div>
+            <div class="col text-start">{{this.comment.userId}}</div>
             <div class="col-2">
                 <!-- Default dropright button -->
                 <div class="dropdown">

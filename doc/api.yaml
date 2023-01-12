@@ -11,6 +11,8 @@ servers:
 tags:
   - name: "Login"
     description: Endpoint for Login operation
+  - name: "All Users"
+    description: Endpoint for operations without a specific user
   - name: "User"
     description: Endpoint for Account operations
   - name: "Profile"
@@ -18,7 +20,8 @@ tags:
   - name: "User operations"
     description: Endpoint for operations about other users 
   - name: "Photo"
-    description: Endpoint for other users photo
+    description: Endpoint for other users photo 
+
 
   
 paths:
@@ -60,6 +63,53 @@ paths:
                     type: integer
                     description: id of the logging user
                     example: 10  
+  /users/{username}:
+    get:
+      tags: ["All Users"]
+      operationId: searchUser
+      summary: Search by username
+      description: |-
+        Search the username in the path and returns the list of users (id and username) that have it in their name
+      parameters: 
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+            example: Maria
+            minLength: 1
+            maxLength: 16
+            pattern: "^[a-zA-Z0-9 ]*$"
+          description: The username to find
+      responses:
+        '201':
+          description: Request was successful
+          content:
+            application/json:
+              schema:
+                description: Ids and username of the users found
+                type: object
+                properties:
+                  id:
+                    type: array
+                    minItems : 0
+                    maxItems : 1000
+                    items: 
+                      type: integer
+                      example: 
+                      -  11
+                      -  12
+                  username:
+                    type: array
+                    minItems : 0
+                    maxItems : 1000
+                    items: 
+                      type: string
+                      example: 
+                      -  Maria
+                      -  Marco
+      security:
+        - Authentication: []
 
   /user/{userId}/profile: 
     parameters:
