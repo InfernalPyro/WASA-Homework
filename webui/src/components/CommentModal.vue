@@ -66,7 +66,7 @@ export default {
                 <!--Body of the modal (Contain every comment of this photo)-->
                 <section class="modal-body" id="modalDescription">
                     <div>
-                        <CommentItem v-for= "comment in comments" :comm="comment" :userId="this.myId" :profileId="this.prId" ></CommentItem>
+                        <CommentItem v-for= "comment in comments" :comm="comment" :userId="this.myId" :profileId="this.prId" :key="comment.commentId"></CommentItem>
                     </div>
                 </section>
                 <!--Make a new comment box-->

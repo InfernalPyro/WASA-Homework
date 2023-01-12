@@ -56,7 +56,7 @@ export default {
         <div id="rbHiderFillTop"></div>
         <!--Each container is made of the photo and the likes and comment buttons-->	    
         <div>
-            <UserItem v-if="flag" v-for= "user in users" :id = "user.UserId" :name = "user.Username"></UserItem>
+            <UserItem v-if="flag" v-for= "user in users" :id = "user.UserId" :name = "user.Username" :key="user.UserId"></UserItem>
         </div>
 	</div>
 

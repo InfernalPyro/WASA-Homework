@@ -149,7 +149,7 @@ export default {
         <div class="col-auto text-center" style="padding-left: 12%;">
             <!--Each container is made of the photo and the likes and comment buttons-->	    
             <div>
-                <PhotoItem v-for= "photo in photos" :images="photo" :id = "this.userId"></PhotoItem>
+                <PhotoItem v-for= "photo in photos" :images="photo" :id = "this.userId" :key="photo.photoId"></PhotoItem>
             </div>
 	    </div>
 
