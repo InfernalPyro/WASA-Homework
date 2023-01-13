@@ -56,14 +56,14 @@ paths:
           content:
             application/json:
               schema:
-                description: id of the logging user #test 22/12
+                description: id of the logging user 
                 type: object
                 properties:
                   identifier:
                     type: integer
                     description: id of the logging user
                     example: 10  
-  /users/{username}:
+  /search/{username}:
     get:
       tags: ["All Users"]
       operationId: searchUser
@@ -88,25 +88,22 @@ paths:
             application/json:
               schema:
                 description: Ids and username of the users found
-                type: object
-                properties:
-                  idList:
-                    description: List of every id found 
-                    type: array
-                    minItems : 0
-                    maxItems : 1000
-                    items: 
+                type: array  
+                items:
+                  description: Ids and username of the users found
+                  type: object
+                  properties:
+                    id:
+                      description: Id of the user found 
                       type: integer
                       example: 11
-                  usernameList:
-                    description: List of every username found 
-                    type: array
-                    minItems : 0
-                    maxItems : 1000
-                    items: 
+                    username:
+                      description: Username of the user found 
                       type: string
                       example: Maria
-
+                      minLength: 3
+                      maxLength: 16
+                      pattern: "^[a-zA-Z0-9 ]*$"
       security:
         - Authentication: []
 

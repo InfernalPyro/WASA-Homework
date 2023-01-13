@@ -23,7 +23,7 @@ export default {
 			try {
 				let response = await this.$axios({
                     method: "get",
-                    url: "/users/" + this.userToFind, 
+                    url: "/search/" + this.userToFind, 
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": "Bearer " + this.token,
@@ -56,7 +56,7 @@ export default {
         <div id="rbHiderFillTop"></div>
         <!--Each container is made of the photo and the likes and comment buttons-->	    
         <div>
-            <UserItem v-if="flag" v-for= "user in users" :id = "user.UserId" :name = "user.Username" :key="user.UserId"></UserItem>
+            <UserItem v-if="flag" v-for= "user in users" :id = "user.id" :name = "user.username" :key="user.UserId"></UserItem>
         </div>
 	</div>
 

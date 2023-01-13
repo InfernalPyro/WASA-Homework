@@ -36,7 +36,7 @@ func (rt *_router) Handler() http.Handler {
 	// Uncomment photo
 	rt.router.DELETE("/profile/:profileId/photo/:photoId/comments/:commentId", rt.wrap(rt.uncommentPhoto))
 	// Search users by username
-	rt.router.GET("/users/:username", rt.wrap(rt.searchUser))
+	rt.router.GET("/search/:username", rt.wrap(rt.searchUser))
 
 	// Special routes
 	rt.router.GET("/liveness", rt.liveness)

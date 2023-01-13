@@ -15,6 +15,11 @@ type Image struct {
 	Image string `json:"image"`
 }
 
+type SimpleUser struct {
+	UserId    uint64 `json:"id"`
+	Username string `json:"username"`
+}
+
 type Comment struct {
 	CommentId uint64 `json:"commentId"`
 	PhotoID   uint64 `json:"photoId"`

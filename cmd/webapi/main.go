@@ -97,7 +97,7 @@ func run() error {
 		logger.WithError(err).Error("error creating AppDatabase")
 		return fmt.Errorf("creating AppDatabase: %w", err)
 	}
-	
+
 	// Start (main) API server
 	logger.Info("initializing API server")
 
