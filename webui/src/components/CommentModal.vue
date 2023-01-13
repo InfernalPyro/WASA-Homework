@@ -36,7 +36,9 @@ export default {
                 }
                 let response = await this.$axios.post(
                     "/profile/" + this.prId + "/photo/" + this.phId + "/comments/", data, config);
-              
+
+                document.getElementById('newComment').value = "";
+                this.$emit('close');
             }
             catch (e) {
                 this.errormsg = e.toString();
