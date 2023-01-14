@@ -62,10 +62,22 @@ export default {
 </script>
 
 <template>
-    <h1>Login</h1>
-	<label for="username">Username:</label>
-  	<input type="text" id="username" name="username" minlenght = "3" maxlenght = "16" pattern = "^[a-zA-Z0-9 ]*$"><br><br>
-	<button @click="login">Login</button>
+	<div id="rbHiderFillTop"></div>
+	<div id="rbHiderFillTop"></div>
+	<div class="row">
+		<div class ="col-auto" style="padding-left: 20vw">
+			<div class="container" style="border-radius: 20px;">
+				<h1>Login</h1>
+				<div id="rbHiderFillTop"></div>
+				<label for="username">Username:</label>
+  				<input type="text" id="username" name="username" minlenght = "3" maxlenght = "16" pattern = "^[a-zA-Z0-9 ]*$"><br><br>
+				<br>
+				<button @click="login">Login</button>
+				<br>
+			</div>
+		</div>
+	</div>
+    
 </template>
 
 <style>

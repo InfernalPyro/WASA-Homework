@@ -29,7 +29,7 @@ export default {
                     }
                 });
 				this.profile = response.data;
-                document.getElementById("username").textContent = this.profile.username
+                document.getElementById("username").textContent = this.profile.username  
 			} catch (e) {
 				this.errormsg = e.toString();
 			}
@@ -51,6 +51,10 @@ export default {
                 }
 
 				let response = await this.$axios.post('/user/'+ this.userId + '/photo/', data, config);
+                const container = document.querySelector("#imageContainer");
+                while (container.firstChild) {
+                    container.removeChild(container.lastChild);
+                }
 				this.$router.push("/user/"+ this.userId +"/profile");
 			} catch (e) {
 				this.errormsg = e.toString();
@@ -99,17 +103,19 @@ export default {
 
         <!--This column contains all the photos in the stream--> 
         <div class="col-8">
-            <div class="row">
-                <h1 class="center">Upload a new photo</h1>
-                <div id="rbHiderFillTop"></div>
-                <input type="file" accept="image/*" id="photo" @change="convertPhoto">
+            <h1 class="center">Upload a new photo</h1>
+            <div id="rbHiderFillTop"></div>
+
+            <div class="row">     
+                <div class="container" id="imageContainer" style="width: 50%; height : 50%; border:hidden">
+                </div>
+                
             </div>
             
             <div id="rbHiderFillTop"></div>
-            <div class="row">
-                <div class="container" id="imageContainer" style="width: 50%; height : 50%;">
 
-                </div>
+            <div class="row">
+                <input type="file" accept="image/*" id="photo" @change="convertPhoto">
             </div>
 	    </div>
 

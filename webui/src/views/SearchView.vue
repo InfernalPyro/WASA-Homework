@@ -52,7 +52,15 @@ export default {
 <template>
 	<!--This column contains all the photos in the stream--> 
     <div class="col-8 text-center" style="padding-left: 12%;">
-        <input type="text" id="searchBox"  placeholder="Search.." @input="search">
+		<div class="row">
+			Find whoever you're looking for by typing their name here:
+		</div>
+		<br><br>
+		
+		<div class="row">
+			<input type="text" id="searchBox"  placeholder="Search.." @input="search">
+		</div>
+
         <div id="rbHiderFillTop"></div>
         <!--Each container is made of the photo and the likes and comment buttons-->	    
         <div>

@@ -55,17 +55,18 @@ export default {
 
 <template>
 
+	
 	<!--Show this for every view EXCEPT login-->
 	<div v-if="nameView != 'login'">
 		<header class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow" >
 			<div class="col-3">
 				<a class="navbar-brand" href="#/">Wasa Photo</a>
 			</div>
-			<div class="col-2">
+			<div class="col-3">
 				<a class="navbar-brand" id ="username" href="#/">Username</a>
 			</div>
-			<div class="col-3">
-				  <button @click="search">Find other users</button>
+			<div class="col-2">
+				  <button class="btn btn-light btn-sm" @click="search"  style="margin: 0.4vw;">Find other users</button>
 			</div>
 		</header>
 
@@ -113,8 +114,16 @@ export default {
 		</div>
 	</div>
 
+	<div v-else>
+		<header class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow" >
+			<div class="col-3">
+				<a class="navbar-brand" href="#/">Wasa Photo</a>
+			</div>
+		</header>
+	</div>
+
 	<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-		<RouterView  @localEvent = "updatePath"></RouterView>
+		<RouterView :key="$route.fullPath" @localEvent = "updatePath"></RouterView>
 	</main>
 </template>
 

@@ -17,13 +17,10 @@ export default {
 
     },
 
-    created() {
-
-    },
 };
 </script>
 <template>
-    <div class="container">
+    <div class="container" style="width: 80%;">
         <button class="btn" @click="goToProfile" type="button" style="padding: 0; border:0;">
             <div class="row justify-content-start">
                 <div class="col-auto">

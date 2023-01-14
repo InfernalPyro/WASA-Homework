@@ -1,5 +1,7 @@
 <script>
 import PhotoItem from '../components/PhotoItem.vue';
+import UsersModal from '../components/UsersModal.vue';
+
 
 
 export default {
@@ -24,6 +26,9 @@ export default {
             followList : sessionStorage.getItem("followListData"),
             followFlag : null,
             bannedFlag : null,
+            usersList : null,
+            isModalVisible : false,
+            modalType :null,
 
         };
     },
@@ -130,26 +135,58 @@ export default {
             }
             this.loading = false;
         },
+
+        async openFollowingModal() {
+            this.isModalVisible = true;
+            this.usersList = this.profile.follows
+            this.modalType = "Following"
+            document.getElementsByTagName("body")[0].style = "overflow-y: hidden; "
+        },
+        async openFollowersModal() {
+            this.isModalVisible = true;
+            this.usersList = this.profile.followers 
+            this.modalType = "Followers"
+            document.getElementsByTagName("body")[0].style = "overflow-y: hidden; "
+        },
+        async openBlockedModal() {
+            this.isModalVisible = true;
+            this.usersList = this.profile.banned 
+            this.modalType = "Blocked"
+            document.getElementsByTagName("body")[0].style = "overflow-y: hidden; "
+        },
+        async closeModal() {
+            this.isModalVisible = false;
+            document.getElementsByTagName("body")[0].style = "overflow-y: scroll;"
+        },
     },
     mounted() {
         this.$nextTick(function () {
             this.refresh();
         });
     },
-    components: { PhotoItem }
+    beforeRouteUpdate(to, from, next) {
+        // Call the API query method when the URL changes
+        this.closeModal();
+        next()
+        
+       
+    },
+    components: { PhotoItem , UsersModal}
 }
 
 </script>
 
 <template>
-    
+
     <div class="row justify-content-between">  
-        
+
+        <UsersModal v-if="isModalVisible" :list="this.usersList" :type="this.modalType" @close="closeModal"/>
+
         <!--This column contains all the photos in the stream--> 
         <div class="col-auto text-center" style="padding-left: 12%;">
             <!--Each container is made of the photo and the likes and comment buttons-->	    
             <div>
-                <PhotoItem v-for= "photo in photos" :images="photo" :id = "this.userId" :key="photo.photoId"></PhotoItem>
+                <PhotoItem v-for= "photo in photos" :images="photo" :id = "this.userId" :key="photo.photoId" @deleted="refresh"></PhotoItem>
             </div>
 	    </div>
 
@@ -180,13 +217,13 @@ export default {
 
 
             <li class="nav-item">
-                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> Following
+                <svg class="feather" @click="openFollowingModal"><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> Following
             </li>
             <li class="nav-item">
-                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#users"/></svg> Followers
+                <svg class="feather" @click="openFollowersModal"><use href="/feather-sprite-v4.29.0.svg#users"/></svg> Followers
             </li>            
             <li class="nav-item">
-                <svg class="feather"><use href="/feather-sprite-v4.29.0.svg#slash"/></svg> Blocked
+                <svg class="feather" @click="openBlockedModal"><use href="/feather-sprite-v4.29.0.svg#slash"/></svg> Blocked
             </li>						
         </div>
 

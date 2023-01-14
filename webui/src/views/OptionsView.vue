@@ -15,6 +15,12 @@ export default {
             this.loading = true;
             this.errormsg = null;
             this.username = document.getElementById('newUsername').value
+            
+            if(this.username.length < 3 || this.username.length > 16){
+				alert("Username must have more than 3 chars and less than 16")
+				return
+			}
+
             try {
                 let config ={
                     headers:{

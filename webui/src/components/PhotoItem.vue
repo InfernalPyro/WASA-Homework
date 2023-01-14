@@ -65,8 +65,7 @@ export default {
         },
         async closeModal() {
             this.isModalVisible = false;
-            document.getElementsByTagName("body")[0].style = "overflow-y: scroll; "
-
+            document.getElementsByTagName("body")[0].style = "overflow-y: scroll;"
         },
         async blockUser() {
             this.loading = true;
@@ -80,6 +79,7 @@ export default {
                         "Authorization": "Bearer " + this.token,
                     }
                 });
+                this.$router.push("/");
             }
             catch (e) {
                 this.errormsg = e.toString();
@@ -98,6 +98,7 @@ export default {
                         "Authorization": "Bearer " + this.token,
                     }
                 });
+            this.$emit("deleted")
             }
             catch (e) {
                 this.errormsg = e.toString();
@@ -178,7 +179,7 @@ export default {
                 <li class="nav-item" >
                     <label> {{this.likeCount}}</label>
                     <!--The v-if checks if the user that is visualizing the image have already left a like to it-->
-                    <svg class="feather" v-if="this.photos.likes != null && this.likeFlag" @click="unlikePhoto"><use href="/feather-sprite-v4.29.0.svg#heart" style="fill:black"/></svg> 
+                    <svg class="feather" v-if="this.likeFlag" @click="unlikePhoto"><use href="/feather-sprite-v4.29.0.svg#heart" style="fill:black"/></svg> 
                     <!--The else means that you DID NOT leave a like yet-->
                     <svg class="feather" v-else @click="likePhoto"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg> 
 
