@@ -38,7 +38,6 @@ export default {
 		 
 		//By using this check if the browser have just been opened we will start with the loginview
 		//(does NOT work on refresh thanks to sessionStorage)
-		console.log(this.session )
 		if (this.session == "null" || this.session == null){
 			this.$router.push("/session");
 			this.path = 0;
