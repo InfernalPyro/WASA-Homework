@@ -86,6 +86,7 @@ export default {
 <template>
 		<!--This column contains all the photos in the stream--> 
         <div class="col-8 text-center" style="padding-left: 12%;">
+		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
             <!--Each container is made of the photo and the likes and comment buttons-->	    
             <div>
                 <PhotoItem v-for= "photo in stream" :images="photo" :id = "userId" :key="photo.photoId"></PhotoItem>

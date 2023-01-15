@@ -7,6 +7,7 @@ export default {
     props: ['comms', 'profileId', 'photoId', 'id'],
     data: function() {
 		return {
+            errormsg: null,
             prId: this.profileId,
             phId: this.photoId,
             comments: this.comms,
@@ -31,7 +32,6 @@ export default {
                     headers:{
                         'Content-Type': "application/json",
                         'Authorization': "Bearer " + this.token,
-
                     }
                 }
                 let data ={
@@ -41,10 +41,12 @@ export default {
                 let response = await this.$axios.post(
                     "/profile/" + this.prId + "/photo/" + this.phId + "/comments/", data, config);
 
-                this.comments.push(response.data)
-
+                
                 document.getElementById('newComment').value = "";
-                this.$emit('addedNew');
+            
+                this.comments.push(response.data)
+                this.$emit('addedNew');   
+               
             }
             catch (e) {
                 this.errormsg = e.toString();
@@ -54,7 +56,7 @@ export default {
 
     },
     created() {
-
+        
     },
     components: {CommentItem }
 };
@@ -68,6 +70,7 @@ export default {
                 aria-labelledby="modalTitle"
                 aria-describedby="modalDescription"
             >
+                <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
                 <header class="modal-header" id="modalTitle">
                     Comments
                     <button type="button" class="btn-close" @click="close" aria-label="Close Modal App">

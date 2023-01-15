@@ -6,6 +6,7 @@ import { RouterLink, RouterView } from 'vue-router'
 export default {
 	data: function() {
 		return {
+			errormsg: null,
 			//This variable contains the id of the user that have been stored after the login. 
 			//We will use this in the url
 			path : 0,
@@ -123,6 +124,7 @@ export default {
 	</div>
 
 	<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 		<RouterView :key="$route.fullPath" @localEvent = "updatePath"></RouterView>
 	</main>
 </template>

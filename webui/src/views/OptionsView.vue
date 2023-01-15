@@ -55,6 +55,7 @@ export default {
 
 <template>
     <div class="row">
+        <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
         <div class="col-auto">
             <label>Type here to change your username : </label>
         </div>

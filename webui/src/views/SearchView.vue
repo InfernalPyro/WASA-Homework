@@ -52,6 +52,7 @@ export default {
 <template>
 	<!--This column contains all the photos in the stream--> 
     <div class="col-8 text-center" style="padding-left: 12%;">
+		<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 		<div class="row">
 			Find whoever you're looking for by typing their name here:
 		</div>

@@ -6,6 +6,7 @@ export default {
     props: ['images','id'],
     data: function() {
 		return {
+            errormsg: null,
             photos: this.images,
             myId : this.id,
             token: sessionStorage.getItem("storedData"),
@@ -132,6 +133,7 @@ export default {
             }
 
             this.commentsCount = (this.photos.comments != null) ? this.photos.comments.length : 0
+            this.photos.comments = (this.photos.comments != null) ? this.photos.comments : []
         });
     },
     components: { CommentModal }
@@ -143,6 +145,7 @@ export default {
     
 
 	<div class="container">
+        <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
         <!--This modal is only visible when we open the comments-->
         <CommentModal v-if="isModalVisible" :comms="this.photos.comments" :profileId = "this.photos.profileId" :photoId = "this.photos.photoId" :id = "this.myId" @close="closeModal" @addedNew="newComment" @deletedComment="commentDeleted"/>
         

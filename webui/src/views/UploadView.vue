@@ -98,7 +98,7 @@ export default {
 
 <template>
     <div class="row justify-content-between">
-
+        <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
         <LoadingSpinner v-if="loading"></LoadingSpinner>
 
         <!--This column contains all the photos in the stream--> 

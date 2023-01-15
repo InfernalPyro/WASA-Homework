@@ -66,6 +66,7 @@ export default {
 	<div id="rbHiderFillTop"></div>
 	<div class="row">
 		<div class ="col-auto" style="padding-left: 20vw">
+			<ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
 			<div class="container" style="border-radius: 20px;">
 				<h1>Login</h1>
 				<div id="rbHiderFillTop"></div>

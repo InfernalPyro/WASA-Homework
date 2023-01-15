@@ -179,7 +179,7 @@ export default {
 <template>
 
     <div class="row justify-content-between">  
-
+        <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
         <UsersModal v-if="isModalVisible" :list="this.usersList" :type="this.modalType" @close="closeModal"/>
 
         <!--This column contains all the photos in the stream--> 
