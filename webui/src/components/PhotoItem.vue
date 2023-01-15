@@ -67,6 +67,16 @@ export default {
             this.isModalVisible = false;
             document.getElementsByTagName("body")[0].style = "overflow-y: scroll;"
         },
+        async newComment() {
+            this.isModalVisible = false;
+            this.commentsCount ++;
+            document.getElementsByTagName("body")[0].style = "overflow-y: scroll;"
+        },
+        async commentDeleted() {
+            this.isModalVisible = false;
+            this.commentsCount --;
+            document.getElementsByTagName("body")[0].style = "overflow-y: scroll;"
+        },
         async blockUser() {
             this.loading = true;
             this.errormsg = null;
@@ -134,7 +144,7 @@ export default {
 
 	<div class="container">
         <!--This modal is only visible when we open the comments-->
-        <CommentModal v-if="isModalVisible" :comms="this.photos.comments" :profileId = "this.photos.profileId" :photoId = "this.photos.photoId" :id = "this.myId" @close="closeModal"/>
+        <CommentModal v-if="isModalVisible" :comms="this.photos.comments" :profileId = "this.photos.profileId" :photoId = "this.photos.photoId" :id = "this.myId" @close="closeModal" @addedNew="newComment" @deletedComment="commentDeleted"/>
         
         <!--This row contains a small photo optios menu and photo profile name-->
         <div class="row ">

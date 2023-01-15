@@ -15,8 +15,12 @@ export default {
         }
     },
     methods: {
-        close() {
+        async close() {
             this.$emit('close');
+        },
+        async deletedComment(index) {
+            this.comments.splice(index,1)
+            this.$emit('deletedComment');
         },
         async commentPhoto() {
             this.loading = true;
@@ -37,14 +41,19 @@ export default {
                 let response = await this.$axios.post(
                     "/profile/" + this.prId + "/photo/" + this.phId + "/comments/", data, config);
 
+                this.comments.push(response.data)
+
                 document.getElementById('newComment').value = "";
-                this.$emit('close');
+                this.$emit('addedNew');
             }
             catch (e) {
                 this.errormsg = e.toString();
             }
             this.loading = false;
         }
+
+    },
+    created() {
 
     },
     components: {CommentItem }
@@ -68,7 +77,7 @@ export default {
                 <!--Body of the modal (Contain every comment of this photo)-->
                 <section class="modal-body" id="modalDescription">
                     <div>
-                        <CommentItem v-for= "comment in comments" :comm="comment" :userId="this.myId" :profileId="this.prId" :key="comment.commentId"></CommentItem>
+                        <CommentItem v-for= "(comment,index) in comments" :comm="comment" :userId="this.myId" :profileId="this.prId" :key="comment.commentId" @deleted="deletedComment(index)"></CommentItem>
                     </div>
                 </section>
                 <!--Make a new comment box-->

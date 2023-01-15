@@ -44,6 +44,7 @@ export default {
                         "Authorization": "Bearer " + this.token,
                     }
                 });
+                this.$emit('deleted');
             }
             catch (e) {
                 this.errormsg = e.toString();
