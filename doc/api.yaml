@@ -679,6 +679,14 @@ components:
           items:
             $ref: '#/components/schemas/Comment'
           readOnly: true
+        
+        username:
+          description: The user's username
+          type: string
+          minLength : 3
+          maxLength : 15
+          example: MyName
+          pattern: "^[a-zA-Z0-9 ]*$"
     
 
     Comment:
@@ -722,6 +730,14 @@ components:
           minLength : 10
           maxLength : 21
           readOnly: true
+        
+        username:
+          description: The user's username
+          type: string
+          minLength : 3
+          maxLength : 15
+          example: MyName
+          pattern: "^[a-zA-Z0-9 ]*$"
 
 
     Stream:

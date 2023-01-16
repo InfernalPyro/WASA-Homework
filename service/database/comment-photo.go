@@ -1,12 +1,14 @@
 package database
 
 // Make user "id" follow user "followId"
-func (db *appdbimpl) CommentPhoto(photoId uint64, comment Comment) (Comment, error) {
+func (db *appdbimpl) CommentPhoto(photoId uint64, comment Comment) (Comment, string, error) {
+
+	var username = ""
 
 	// Get a Tx for making transaction requests.
 	tx, err := db.c.Begin()
 	if err != nil {
-		return comment, err
+		return comment, username, err
 	}
 
 	// Query to insert the new like
@@ -16,30 +18,30 @@ func (db *appdbimpl) CommentPhoto(photoId uint64, comment Comment) (Comment, err
 			err = ErrPhotoNotFound
 		}
 		if tx.Rollback() != nil {
-			return comment, err
+			return comment, username, err
 		}
-		return comment, err
+		return comment, username, err
 	}
 
 	// Query to get the id of the new comment
-	row, err := tx.Query("select commentId from comment where photoId = ? and userId = ? and content = ? and time = ?", photoId, comment.UserId, comment.Content, comment.Time)
+	row, err := tx.Query("select comment.commentId, user.username from comment,user where photoId = ? and comment.userId = ? and content = ? and time = ? and comment.userId = user.userId", photoId, comment.UserId, comment.Content, comment.Time)
 	if err != nil {
-		return comment, err
+		return comment, username, err
 	}
 	if row.Next() {
-		err = row.Scan(&comment.CommentId)
+		err = row.Scan(&comment.CommentId, &username)
 		if err != nil {
-			return comment, err
+			return comment, username, err
 		}
 	}
 	if err = row.Err(); err != nil {
-		return comment, err
+		return comment, username, err
 	}
 
 	// Commit the transaction.
 	if err = tx.Commit(); err != nil {
-		return comment, err
+		return comment, username, err
 	}
 
-	return comment, nil
+	return comment, username, nil
 }

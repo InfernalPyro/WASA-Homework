@@ -158,7 +158,7 @@ export default {
                             <use href="/feather-sprite-v4.29.0.svg#user"/>
                         </svg>        
                     </button>
-                    {{this.photos.profileId}}
+                    {{this.photos.username}}
                     
                 </div>
             </div>

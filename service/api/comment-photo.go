@@ -51,7 +51,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	dbComment.Time = t.Format(layout)
 
 	// Call the function make user "id" follow the user "followId"
-	newComment, err := rt.db.CommentPhoto(photoId, dbComment)
+	newComment, username, err := rt.db.CommentPhoto(photoId, dbComment)
 	if err != nil {
 		if errors.Is(err, database.ErrPhotoNotFound) {
 			ctx.Logger.WithError(err).Error("Photo does not exists")
@@ -70,6 +70,7 @@ func (rt *_router) commentPhoto(w http.ResponseWriter, r *http.Request, ps httpr
 	comment.UserId = newComment.UserId
 	comment.Comment = newComment.Content
 	comment.Time = newComment.Time
+	comment.Username = username
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")

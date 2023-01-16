@@ -27,6 +27,7 @@ type Comment struct {
 	UserId    uint64 `json:"userId"`
 	Comment   string `json:"comment"`
 	Time      string `json:"time"`
+	Username  string `json:"username"`
 }
 
 type Photo struct {
@@ -36,6 +37,7 @@ type Photo struct {
 	Time      string    `json:"time"`
 	Likes     []uint64  `json:"likes"`
 	Comments  []Comment `json:"comments"`
+	Username  string    `json:"username"`
 }
 
 type User struct {
@@ -75,16 +77,18 @@ func (u *User) UserFromDatabase(user database.User, follow []database.Follow, fo
 		comment.UserId = c.UserId
 		comment.Comment = c.Content
 		comment.Time = c.Time
+		comment.Username = user.Username
 		u.Comments = append(u.Comments, comment)
 	}
 }
 
 // This function convert all the data of a single photo taken from the db into a single photo in api form
-func (p *Photo) PhotoFromDatabase(photo database.Photo, comments []database.Comment, likes []database.Like) {
+func (p *Photo) PhotoFromDatabase(photo database.Photo, comments []database.Comment, likes []database.Like, username string) {
 	p.PhotoId = photo.PhotoId
 	p.ProfileId = photo.UserId
 	p.Image = string(photo.Image[:])
 	p.Time = photo.Time
+	p.Username = username
 	for _, l := range likes {
 		p.Likes = append(p.Likes, l.UserId)
 	}
@@ -95,6 +99,7 @@ func (p *Photo) PhotoFromDatabase(photo database.Photo, comments []database.Comm
 		comment.UserId = c.UserId
 		comment.Comment = c.Content
 		comment.Time = c.Time
+		comment.Username = username
 		p.Comments = append(p.Comments, comment)
 	}
 }

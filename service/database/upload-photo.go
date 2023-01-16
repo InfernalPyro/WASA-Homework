@@ -3,12 +3,14 @@ package database
 import "time"
 
 // Login the user by their username
-func (db *appdbimpl) UploadPhoto(id uint64, photo Photo) (Photo, error) {
+func (db *appdbimpl) UploadPhoto(id uint64, photo Photo) (Photo, string, error) {
+
+	var username = ""
 
 	// Get a Tx for making transaction requests.
 	tx, err := db.c.Begin()
 	if err != nil {
-		return photo, err
+		return photo, username, err
 	}
 
 	// Get current time
@@ -26,30 +28,30 @@ func (db *appdbimpl) UploadPhoto(id uint64, photo Photo) (Photo, error) {
 			err = ErrUserNotFound
 		}
 		if tx.Rollback() != nil {
-			return photo, err
+			return photo, username, err
 		}
-		return photo, err
+		return photo, username, err
 	}
 
 	// Query to get the id of the new photo published
-	row, err := tx.Query("select photoId from photo where userId = ? and image = ? and time = ?", photo.UserId, photo.Image, photo.Time)
+	row, err := tx.Query("select photoId,user.username from photo,user where photo.userId = user.userId and photo.userId = ? and image = ? and time = ?", photo.UserId, photo.Image, photo.Time)
 	if err != nil {
-		return photo, err
+		return photo, username, err
 	}
 	if row.Next() {
-		err = row.Scan(&photo.PhotoId)
+		err = row.Scan(&photo.PhotoId, &username)
 		if err != nil {
-			return photo, err
+			return photo, username, err
 		}
 	}
 	if err = row.Err(); err != nil {
-		return photo, err
+		return photo, username, err
 	}
 
 	// Commit the transaction.
 	if err = tx.Commit(); err != nil {
-		return photo, err
+		return photo, username, err
 	}
 
-	return photo, nil
+	return photo, username, nil
 }

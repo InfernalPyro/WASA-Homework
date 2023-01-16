@@ -51,7 +51,7 @@ func (rt *_router) getUserProfile(w http.ResponseWriter, r *http.Request, ps htt
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		photo.PhotoFromDatabase(p, comments, likes)
+		photo.PhotoFromDatabase(p, comments, likes, *&dbUser.Username)
 		photos = append(photos, photo)
 	}
 

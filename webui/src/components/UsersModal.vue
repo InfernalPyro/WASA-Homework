@@ -34,7 +34,7 @@ export default {
                         <svg class="feather" style="stroke:red; stroke-width:5"><use href="/feather-sprite-v4.29.0.svg#x"/></svg>
                     </button>
                 </header>
-                <!--Body of the modal (Contain every comment of this photo)-->
+                <!--Body of the modal-->
                 <section class="modal-body" id="modalDescription">
                     <div>
                         <UserItem v-for= "user in users" :id = "user" :name ="user" :key="user"></UserItem>

@@ -82,7 +82,7 @@ const ErrForeignKey = "FOREIGN KEY constraint failed"
 type AppDatabase interface {
 	LoginUser(username string) (int64, error)
 	ChangeName(id uint64, newUsername string) error
-	GetStream(id uint64) ([]Photo, error)
+	GetStream(id uint64) ([]Photo, string, error)
 	GetProfile(id uint64) (*User, *[]Follow, *[]Follow, *[]Ban, *[]Comment, *[]Photo, *[]Like, error)
 	GetPhotoInfo(photoId uint64, id uint64) ([]Comment, []Like, error)
 	FollowUser(id uint64, followId uint64) error
@@ -91,10 +91,10 @@ type AppDatabase interface {
 	UnbanUser(id uint64, banId uint64) error
 	LikePhoto(id uint64, photoId uint64) error
 	UnlikePhoto(id uint64, photoId uint64) error
-	CommentPhoto(photoId uint64, comment Comment) (Comment, error)
+	CommentPhoto(photoId uint64, comment Comment) (Comment, string, error)
 	UncommentPhoto(commentId uint64, photoId uint64) error
 	GetComment(commentId uint64, photoId uint64) (Comment, error)
-	UploadPhoto(id uint64, bImage Photo) (Photo, error)
+	UploadPhoto(id uint64, bImage Photo) (Photo, string, error)
 	DeletePhoto(id uint64, photoId uint64) error
 	SearchUserByName(username string) ([]User, error)
 

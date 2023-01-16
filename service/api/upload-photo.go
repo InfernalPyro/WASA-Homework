@@ -3,11 +3,12 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/InfernalPyro/WASA-Homework/service/api/reqcontext"
 	"github.com/InfernalPyro/WASA-Homework/service/database"
 	"github.com/julienschmidt/httprouter"
-	"net/http"
-	"strconv"
 )
 
 func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params, ctx reqcontext.RequestContext) {
@@ -42,7 +43,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	dbPhoto := PhotoToDatabase(apiPhoto)
 
 	// Call the function to upload the photo
-	dbPhoto, err = rt.db.UploadPhoto(id, dbPhoto)
+	dbPhoto, username, err := rt.db.UploadPhoto(id, dbPhoto)
 	if err != nil {
 		if errors.Is(err, database.ErrUserNotFound) {
 			ctx.Logger.WithError(err).Error("User not found")
@@ -58,7 +59,7 @@ func (rt *_router) uploadPhoto(w http.ResponseWriter, r *http.Request, ps httpro
 	var comments []database.Comment
 	var likes []database.Like
 	// Convert the photo from database to api form
-	apiPhoto.PhotoFromDatabase(dbPhoto, comments, likes)
+	apiPhoto.PhotoFromDatabase(dbPhoto, comments, likes, username)
 
 	// Send the output to the user.
 	w.Header().Set("Content-Type", "application/json")
