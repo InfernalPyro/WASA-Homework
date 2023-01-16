@@ -51,6 +51,13 @@ export default {
                 this.followFlag = this.followList.includes(this.profileId);
                 this.bannedFlag = this.bannedList.includes(this.profileId);
 
+                if (this.profileId == this.token){
+                    this.followList = this.profile.follows;
+				    this.bannedList = this.profile.banned;
+				    sessionStorage.setItem('followListData', this.followList);
+				    sessionStorage.setItem('bannedListData', this.bannedList);
+                }
+
             }
             catch (e) {
                 this.errormsg = e.toString();
