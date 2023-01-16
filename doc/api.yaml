@@ -89,6 +89,8 @@ paths:
               schema:
                 description: Ids and username of the users found
                 type: array  
+                minItems : 0
+                maxItems : 1000
                 items:
                   description: Ids and username of the users found
                   type: object

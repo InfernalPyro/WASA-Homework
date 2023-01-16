@@ -190,11 +190,16 @@ export default {
         <div class="row justify-content-around">
             <div class="col text-center">
                 <li class="nav-item" >
-                    <label> {{this.likeCount}}</label>
                     <!--The v-if checks if the user that is visualizing the image have already left a like to it-->
-                    <svg class="feather" v-if="this.likeFlag" @click="unlikePhoto"><use href="/feather-sprite-v4.29.0.svg#heart" style="fill:black"/></svg> 
+                    <div v-if="this.likeFlag">
+                        <label> {{this.likeCount}}</label>
+                        <svg class="feather" @click="unlikePhoto"><use href="/feather-sprite-v4.29.0.svg#heart" style="fill:black"/></svg> 
+                    </div>
                     <!--The else means that you DID NOT leave a like yet-->
-                    <svg class="feather" v-else @click="likePhoto"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg> 
+                    <div v-else>
+                        <label> {{this.likeCount}}</label>
+                        <svg class="feather"  @click="likePhoto"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg> 
+                    </div>
 
                 </li>
             </div>
