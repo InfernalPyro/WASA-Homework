@@ -29,7 +29,7 @@ export default {
             usersList : null,
             isModalVisible : false,
             modalType :null,
-
+            youAreBannedFlag : false,
         };
     },
     methods: {
@@ -50,6 +50,13 @@ export default {
                 document.getElementById("username").textContent = this.profile.username; 
                 this.followFlag = this.followList.includes(this.profileId);
                 this.bannedFlag = this.bannedList.includes(this.profileId);
+                
+                if (this.profile.banned != null){
+                    if (this.profile.banned.includes(Number(this.token))){
+                        this.youAreBannedFlag = true;
+                    }
+                }
+                
 
                 if (this.profileId == this.token){
                     this.followList = this.profile.follows;
@@ -57,7 +64,7 @@ export default {
 				    sessionStorage.setItem('followListData', this.followList);
 				    sessionStorage.setItem('bannedListData', this.bannedList);
                 }
-
+                
             }
             catch (e) {
                 this.errormsg = e.toString();
@@ -185,7 +192,7 @@ export default {
 
 <template>
 
-    <div class="row justify-content-between">  
+    <div v-if="!youAreBannedFlag" class="row justify-content-between">  
         <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
         <UsersModal v-if="isModalVisible" :list="this.usersList" :type="this.modalType" @close="closeModal"/>
 
@@ -234,6 +241,10 @@ export default {
             </li>						
         </div>
 
+    </div>
+
+    <div v-else>
+        <h4>You are banned from this profile  </h4>
     </div>
 	
 </template>
