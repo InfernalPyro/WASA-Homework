@@ -2,9 +2,10 @@ package api
 
 import (
 	"errors"
-	"github.com/InfernalPyro/WASA-Homework/service/database"
 	"strconv"
 	"strings"
+
+	"github.com/InfernalPyro/WASA-Homework/service/database"
 )
 
 type Session struct {
@@ -16,7 +17,7 @@ type Image struct {
 }
 
 type SimpleUser struct {
-	UserId    uint64 `json:"id"`
+	UserId   uint64 `json:"id"`
 	Username string `json:"username"`
 }
 
@@ -76,7 +77,6 @@ func (u *User) UserFromDatabase(user database.User, follow []database.Follow, fo
 		comment.Time = c.Time
 		u.Comments = append(u.Comments, comment)
 	}
-	return
 }
 
 // This function convert all the data of a single photo taken from the db into a single photo in api form
@@ -97,7 +97,6 @@ func (p *Photo) PhotoFromDatabase(photo database.Photo, comments []database.Comm
 		comment.Time = c.Time
 		p.Comments = append(p.Comments, comment)
 	}
-	return
 }
 
 // This function convert an api photo to a database one
