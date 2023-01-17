@@ -73,12 +73,16 @@ export default {
                         </svg>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li v-if="this.comment.userId != this.myId">
-                            <a class="dropdown-item" @click="blockUser">Block User</a>
-                        </li>
-                        <li v-else>
-                            <a class="dropdown-item" @click="deleteComment">Delete Comment</a>
-                        </li>
+                        <template v-if="this.comment.userId != this.myId">
+                            <li >
+                                <a class="dropdown-item" @click="blockUser">Block User</a>
+                            </li>
+                        </template>
+                        <template v-else>
+                            <li>
+                                <a class="dropdown-item" @click="deleteComment">Delete Comment</a>
+                            </li>
+                        </template>   
                     </ul>
                 </div>
             </div>

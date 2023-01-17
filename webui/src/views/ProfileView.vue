@@ -192,56 +192,68 @@ export default {
 
 <template>
 
-    <div v-if="!youAreBannedFlag" class="row justify-content-between">  
-        <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
-        <UsersModal v-if="isModalVisible" :list="this.usersList" :type="this.modalType" @close="closeModal"/>
+    <template  v-if="!youAreBannedFlag">
+        <div  class="row justify-content-between">  
+            <ErrorMsg v-if="errormsg" :msg="errormsg"></ErrorMsg>
+            <UsersModal v-if="isModalVisible" :list="this.usersList" :type="this.modalType" @close="closeModal"/>
 
-        <!--This column contains all the photos in the stream--> 
-        <div class="col-auto text-center" style="padding-left: 12%;">
-            <!--Each container is made of the photo and the likes and comment buttons-->	    
-            <div>
-                <PhotoItem v-for= "photo in photos" :images="photo" :id = "this.userId" :key="photo.photoId" @deleted="refresh"></PhotoItem>
-            </div>
-	    </div>
-
-
-        <!--This is a fixed in page column that contains the profile informations-->
-        <div class="col-3" style="padding-right: 100px; border-left-style: solid;">
-            <!--If this profile is not yours there are the follow and block buttons too-->
-            <div class="row">
-                <div class="col-auto">
-                    <button v-if="!loading &&  !this.followFlag && this.profileId != this.userId && !this.bannedFlag" type="button" id = "followButton" style="width: fit-container; margin-left:30%" @click="followUser">
-				        Follow
-			        </button>
-                    <button v-else-if="!loading && this.followFlag && this.profileId != this.userId" type="button" id = "unfollowButton" style="width: fit-container; margin-left:30%" @click="unfollowUser">
-				        Unfollow
-			        </button>
+            <!--This column contains all the photos in the stream--> 
+            <div class="col-auto text-center" style="padding-left: 12%;">
+                <!--Each container is made of the photo and the likes and comment buttons-->	    
+                <div>
+                    <PhotoItem v-for= "photo in photos" :images="photo" :id = "this.userId" :key="photo.photoId" @deleted="refresh"></PhotoItem>
                 </div>
-                <div class="col-auto">
-                    <button v-if="!loading && !this.bannedFlag && this.profileId != this.userId" type="button" id = "blockButton" style="width: fit-container; margin-left:30%" @click="banUser">
-				        Block
-			        </button>
-                    <button v-else-if="!loading && this.bannedFlag && this.profileId != this.userId" type="button" id = "unblockButton" style="width: fit-container; margin-left:30%" @click="unbanUser">
-				        Unblock
-			        </button>
+	        </div>
+
+
+            <!--This is a fixed in page column that contains the profile informations-->
+            <div class="col-3" style="padding-right: 100px; border-left-style: solid;">
+                <!--If this profile is not yours there are the follow and block buttons too-->
+                <div class="row">
+                    <div class="col-auto">
+                        <template v-if="!loading &&  !this.followFlag && this.profileId != this.userId && !this.bannedFlag">
+                            <button type="button" id = "followButton" style="width: fit-container; margin-left:30%" @click="followUser">
+		    		            Follow
+		    	            </button>
+                        </template>
+                        <template v-else-if="!loading && this.followFlag && this.profileId != this.userId">
+                            <button type="button" id = "unfollowButton" style="width: fit-container; margin-left:30%" @click="unfollowUser">
+		    		            Unfollow
+		    	            </button>
+                        </template>
+                    
+                    </div>
+                    <div class="col-auto">
+                        <template v-if="!loading && !this.bannedFlag && this.profileId != this.userId">
+                            <button type="button" id = "blockButton" style="width: fit-container; margin-left:30%" @click="banUser">
+		    		            Block
+		    	            </button>
+                        </template>
+                        <template v-else-if="!loading && this.bannedFlag && this.profileId != this.userId">
+                            <button type="button" id = "unblockButton" style="width: fit-container; margin-left:30%" @click="unbanUser">
+			    	            Unblock
+			                </button>
+                        </template>   
+                    </div>
                 </div>
+
+                <div id="rbHiderFillTop"></div>
+
+
+                <li class="nav-item">
+                    <svg class="feather" @click="openFollowingModal"><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> Following
+                </li>
+                <li class="nav-item">
+                   <svg class="feather" @click="openFollowersModal"><use href="/feather-sprite-v4.29.0.svg#users"/></svg> Followers
+                </li>            
+                <li class="nav-item">
+                    <svg class="feather" @click="openBlockedModal"><use href="/feather-sprite-v4.29.0.svg#slash"/></svg> Blocked
+                </li>						
             </div>
-
-            <div id="rbHiderFillTop"></div>
-
-
-            <li class="nav-item">
-                <svg class="feather" @click="openFollowingModal"><use href="/feather-sprite-v4.29.0.svg#user-check"/></svg> Following
-            </li>
-            <li class="nav-item">
-                <svg class="feather" @click="openFollowersModal"><use href="/feather-sprite-v4.29.0.svg#users"/></svg> Followers
-            </li>            
-            <li class="nav-item">
-                <svg class="feather" @click="openBlockedModal"><use href="/feather-sprite-v4.29.0.svg#slash"/></svg> Blocked
-            </li>						
         </div>
 
-    </div>
+    </template>
+    
 
     <div v-else>
         <h4>You are banned from this profile  </h4>

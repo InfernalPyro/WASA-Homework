@@ -171,12 +171,17 @@ export default {
                         </svg>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li v-if="this.photos.profileId != this.myId">
-                            <a class="dropdown-item" @click="blockUser">Block User</a>
-                        </li>
-                        <li v-else>
-                            <a class="dropdown-item" @click="deletePhoto">Delete Photo</a>
-                        </li>
+                        <template v-if="this.photos.profileId != this.myId">
+                            <li >
+                                <a class="dropdown-item" @click="blockUser">Block User</a>
+                            </li>
+                        </template>
+                        <template v-else>
+                            <li>
+                                <a class="dropdown-item" @click="deletePhoto">Delete Photo</a>
+                            </li>
+                        </template>
+                        
                     </ul>
                 </div>
             </div>
@@ -191,15 +196,20 @@ export default {
             <div class="col text-center">
                 <li class="nav-item" >
                     <!--The v-if checks if the user that is visualizing the image have already left a like to it-->
-                    <div v-if="this.likeFlag">
-                        <label> {{this.likeCount}}</label>
-                        <svg class="feather" @click="unlikePhoto"><use href="/feather-sprite-v4.29.0.svg#heart" style="fill:black"/></svg> 
-                    </div>
-                    <!--The else means that you DID NOT leave a like yet-->
-                    <div v-else>
-                        <label> {{this.likeCount}}</label>
-                        <svg class="feather"  @click="likePhoto"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg> 
-                    </div>
+                    <template v-if="this.likeFlag">
+                        <div>
+                            <label> {{this.likeCount}}</label>
+                            <svg class="feather" @click="unlikePhoto"><use href="/feather-sprite-v4.29.0.svg#heart" style="fill:black"/></svg> 
+                        </div>
+                    </template>
+                    <template v-else>
+                        <!--The else means that you DID NOT leave a like yet-->
+                        <div>
+                            <label> {{this.likeCount}}</label>
+                            <svg class="feather"  @click="likePhoto"><use href="/feather-sprite-v4.29.0.svg#heart"/></svg> 
+                        </div>
+                    </template>
+                   
 
                 </li>
             </div>

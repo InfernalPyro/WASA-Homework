@@ -122,7 +122,7 @@ export default {
         <!--This is a fixed in page column that contains the profile informations-->
         <div class="col-3" style="padding-right: 100px; border-left-style: solid;">
              <div class="row">
-                <button v-if="!loading" type="button" id = "uploadButton" class="btn btn-primary" style="width: fit-container; margin-left:30%" @click="uploadPhoto" disabled>
+                <button type="button" id = "uploadButton" class="btn btn-primary" style="width: fit-container; margin-left:30%" @click="uploadPhoto" disabled>
 				    Upload
 			    </button>
             </div>
